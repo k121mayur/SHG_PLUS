@@ -2,8 +2,6 @@ Flask
 Gunicorn
 flask_security
 werkzeug
-datetime
-os
 email_validator
 jwt
 flask_restful
