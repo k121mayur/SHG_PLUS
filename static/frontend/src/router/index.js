@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import loginView from '../views/LoginView.vue'
+import dashboardView from '../views/dashboardView.vue'
+import dataEntryView from '../views/dataEntryView.vue'
+import newGroupEntry from '../views/newGroupEntry.vue'
 
 const routes = [
   {
@@ -20,8 +23,20 @@ const routes = [
 
   {
     path: '/dashboard',
-    name: 'login',
-    component: loginView
+    name: 'dashboard',
+    component: dashboardView
+  },
+
+  {
+    path: '/dataEntry',
+    name: 'dataEntry',
+    component: dataEntryView
+  },
+
+  {
+    path: '/newGroup',
+    name: 'newGroup',
+    component: newGroupEntry
   },
 
 ]

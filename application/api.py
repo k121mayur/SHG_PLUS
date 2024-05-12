@@ -1,5 +1,5 @@
 from application.database import db
-from application.models import Users, Sections, Books, Books_Authors, Books_Lendings, Authors, Requests
+from application.models import *
 from flask import current_app as app, jsonify, request
 from flask_restful import Resource
 from flask_restful import fields, marshal_with, marshal_with_field

@@ -9,9 +9,24 @@ from datetime import datetime
 from datetime import timedelta
 import os
 from email_validator import validate_email
-from application.models import Users, Requests, Sections, Books, Books_Authors, Books_Lendings, Authors
+from application.models import *
 import jwt
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.json.get("email")
+    password = request.json.get("password")
+    role = request.json.get("role")
+
+    print(email, password, role)
+
+    return jsonify(True)
+    
+@app.route("/role")
+def role():
+    role = current_user.roles[0].name
+    return jsonify(role) 
