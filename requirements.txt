@@ -9,8 +9,5 @@ flask_cors
 celery
 flask_sqlalchemy
 flask_caching
-smtplib
-email
-enum
 flask_excel
 jinja2
