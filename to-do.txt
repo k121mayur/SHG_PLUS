@@ -1,0 +1,1 @@
+1) Separete the account from SHG and add shg_id account_details separately in bank account details

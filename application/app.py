@@ -61,6 +61,6 @@ from application.controllers import *
 from application.api import *
 
 # api.add_resource(userApi, "/api/v1/user", "/api/v1/user/<int:user_id>")
-# api.add_resource(sectionApi, "/api/v1/section", "/api/v1/section/<int:section_id>", "/api/v1/section/delete/<int:section_id>")
-# api.add_resource(bookApi, "/api/v1/books", "/api/v1/books/<int:section_id>", "/api/v1/books/delete/<int:book_id>")
+api.add_resource(shgApi, "/api/v1/shg", "/api/v1/shg/<int:shg_id>")
+api.add_resource(memberApi, "/api/v1/member", "/api/v1/member/<int:member_id>")
 # api.add_resource(requestApi, "/api/v1/request")

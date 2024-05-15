@@ -13,7 +13,7 @@
             <a href="#">Shareout</a>
         </div class="element">
         <div class="element"> 
-            <a href="#">Add / Remove Member</a>
+            <a href="/newMember">Add / Remove Member</a>
         </div class="element">
 
         <div class="element"> 
