@@ -4,15 +4,10 @@
     
     <div class="d-flex flex-row m-0 col-md-12 panel"> 
         <SidePanel class="col-md-3"/>
-        <div class="main-panel col-md-9">
-            <h1>Data Entry Here</h1>
-        </div>
-
+        <meetingDataEntry class="main-panel col-md-9"/>
     </div>
-    
-    
-
-</template>
+        
+ </template>
 
 
 <style>
@@ -31,13 +26,15 @@
 </style>
 
 <script>
+import meetingDataEntry from "@/components/meetingDataEntry.vue"
 
 import SidePanel from "@/components/SidePanel.vue"
 
 export default {
     name: 'dataEntryView', 
     components: {
-        SidePanel
+        SidePanel,
+        meetingDataEntry
     }
 }
 

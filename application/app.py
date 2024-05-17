@@ -62,5 +62,5 @@ from application.api import *
 
 # api.add_resource(userApi, "/api/v1/user", "/api/v1/user/<int:user_id>")
 api.add_resource(shgApi, "/api/v1/shg", "/api/v1/shg/<int:shg_id>")
-api.add_resource(memberApi, "/api/v1/member", "/api/v1/member/<int:member_id>")
+api.add_resource(memberApi, "/api/v1/member", "/api/v1/member/<int:shg_id>")
 # api.add_resource(requestApi, "/api/v1/request")

@@ -1,13 +1,23 @@
 <template>
-  <div class="container">
+  <div class="z-100 text-danger" v-if="!shg_status" style="margin: auto; font-size: 20px">  You Can't Add a member without adding a SHG</div>
+  <div class="container" v-if="shg_status">
     <h1>Member Registration Form</h1>
     <form @submit.prevent="addMember">
       <div class="row">
+        
         <div class="col-md-6">
           <h2>Member Information</h2>
           <div class="form-group">
             <label for="shg_id">SHG Name:</label>
-            <input type="text" class="form-control" id="shg_name" v-model="formData.shg_name" required>
+            <VueMultiselect 
+              @focusout="fetch_village"
+              v-model="formData.shg_name"
+              label="name"
+              :options="shg_list"
+              placeholder="Type to search or select SHG"
+            > </VueMultiselect>
+            <!-- <input type="text" class="form-control" id="shg_name" v-model="formData.shg_name" required>
+            <div style="z-index: 999; position: absolute; background-color: white;"> <div>SHG 1</div> </div> -->
             <!-- <div v-if="shg_list and show_shg" class="mt-3">
               <ul>
                 <li> Test SHG Name</li>
@@ -16,7 +26,7 @@
           </div>
           <div class="form-group">
             <label for="village">Village:</label>
-            <input type="text" class="form-control" id="village" v-model="formData.village">
+            <input type="text" class="form-control" id="village" v-model="formData.shg_name.village">
           </div>
           <div class="form-group">
             <label for="household_code">Household Code:</label>
@@ -216,24 +226,46 @@
             <input type="text" class="form-control" id="IFSC_code" v-model="formData.IFSC_code">
           </div>
         </div>
+        <div class="col-md-12 border p-3 m-2 d-flex flex-row custom-scheme-div" >
+          <div class="col-md-6 d-flex flex-column align-items-center">
+            <div class="">
+                <input class="m-1" type="checkbox" id="scheme_1" name="scheme_1" value="scheme_1" v-model ="formData.scheme_1">
+                <label for="Scheme_1" class="m-1"> Scheme 1</label><br>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex flex-column align-items-center">
+            <div class="">
+                <input class="m-1" type="checkbox" id="scheme_2" name="scheme_2" value="scheme_2" v-model ="formData.scheme_2">
+                <label for="Scheme_2" class="m-1"> Scheme 2</label><br>
+            </div>
+          
+          </div>
+        
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary" :disabled="!shg_status">Submit</button>
     </form>
   </div>
 </template>
 
 <script>
+import VueMultiselect from 'vue-multiselect';
 import axios from 'axios';
 
 export default {
   name: 'memberEntry',
 
+  components: {
+    VueMultiselect
+  },
+
   data() {
     return {
       shg_list: [],
+      shg_status: true,
       formData: {
         member_id: null,
-        shg_name: null,
+        shg_name: {name: '', village: ''},
         village: '',
         household_code: '',
         first_name: '',
@@ -259,14 +291,17 @@ export default {
         bank_name: '',
         branch_name: '',
         account_number: '',
-        IFSC_code: ''
+        IFSC_code: '',
+
+        scheme_1: false,
+        scheme_2: false
       }
     };
   },
   methods: {
     addMember() {
 
-      axios.post('http://127.0.0.1:8000/api/member/', this.formData, { headers: { 'Token': localStorage.getItem('token') } } 
+      axios.post('/api/v1/member', this.formData, { headers: { 'Token': localStorage.getItem('token') } } 
     ).then((response) => {
       if (response === 200){
         alert("Member Added Successfully")
@@ -275,11 +310,18 @@ export default {
     })
   }, 
 
+  showError(){
+        this.shg_status = false
+  },
+
   fetchSHG(){
-    axios.get('http://127.0.0.1:8000/api/shg', { headers: { 'Token': localStorage.getItem('token') } } ).then((response) => {
+    axios.get('/api/v1/shg', { headers: { 'Token': localStorage.getItem('token') } } ).then((response) =>{
       this.shg_list = response.data
-  })
-}
+      if (this.shg_list.length == 0){
+        this.showError()
+      }
+    })
+    }
   },
  created() {
   this.fetchSHG();
@@ -289,6 +331,12 @@ export default {
 </script>
 
 <style scoped>
+.custom-scheme-div{
+    border-radius: 10Px;
+    background-color: whitesmoke;
+
+}
+
 .main-panel {
     height: 85vh;
     border: solid 1px black;
@@ -304,6 +352,7 @@ export default {
     flex-direction: row;
     width: 100;
     text-wrap: nowrap;
+    align-items: center;
     margin: 1%;
 }
 
@@ -331,3 +380,4 @@ h1 {
     padding: 1%;
 }
 </style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

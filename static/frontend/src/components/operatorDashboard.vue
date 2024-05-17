@@ -10,7 +10,21 @@
             <SidePanel class="col-md-3"/>
 
             <div class="main-panel col-md-9 ">
-            
+                <h1>Operator Dashboard</h1>
+                <div class="d-flex flex-row justify-content-between">
+                    <div class ="col-md-6 d-flex flex-column">
+                        
+                        <div class="text-warning m-2 col-md-6"><h3>3</h3></div>
+                        <div class="text-info m-2 col-md-6"> <h4>Total Number of Groups</h4> </div>
+                    </div>
+
+                    <div class ="col-md-6 d-flex flex-column">
+                        
+                    </div>
+
+                
+                
+                </div>
             </div>
         
         </div>
