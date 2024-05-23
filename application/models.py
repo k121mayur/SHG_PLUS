@@ -1,7 +1,6 @@
 from application.database import db
 from flask_security import UserMixin, RoleMixin
 
-
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, autoincrement=True, nullable=False)
@@ -57,9 +56,10 @@ class shgBankAccount(db.Model):
     account_number = db.Column(db.String(50), nullable=False)
     IFSC_code = db.Column(db.String(20), nullable=False)
     shg_id = db.Column(db.Integer, db.ForeignKey('shg.id'), nullable=False)
+    balance = db.Column(db.Integer, nullable=False, default=0)
 
 
-class  members(db.Model):
+class members(db.Model):
     __tablename__ = 'members'
 
     member_id = db.Column(db.Integer, primary_key=True)
@@ -78,7 +78,7 @@ class  members(db.Model):
     category = db.Column(db.String(255))
     caste = db.Column(db.String(255))
     number_of_family_members = db.Column(db.Integer, nullable=False)
-    mobile_number = db.Column(db.String(10), nullable=False)
+    mobile_number = db.Column(db.String(10), nullable=False, unique=True)
     total_land_kattha = db.Column(db.Integer)
     total_irrigated_land_kattha = db.Column(db.Integer)
     total_no_of_goats = db.Column(db.Integer)
@@ -89,9 +89,11 @@ class  members(db.Model):
     scheme_1 = db.Column(db.Boolean)
     scheme_2 = db.Column(db.Boolean)
     
-    total_savings = db.Column(db.Integer)
-    loan_outstanding = db.Column(db.Integer)
-    interest_outstanding = db.Column(db.Integer)
+    total_savings = db.Column(db.Integer, default=0)
+    loan_outstanding = db.Column(db.Integer, default=0)
+    interest_outstanding = db.Column(db.Integer, default=0)
+
+    active = db.Column(db.Boolean, default=True)
 
 
 class memberBankAccount(db.Model):
@@ -105,4 +107,82 @@ class memberBankAccount(db.Model):
     IFSC_code = db.Column(db.String(11), nullable=False)
     member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
 
+class meetings(db.Model):
+    __tablename__ = 'meetings'
+    id = db.Column(db.Integer, primary_key=True)
+    shg_id = db.Column(db.Integer, db.ForeignKey('shg.id'), nullable=False)
+    meeting_date = db.Column(db.Date, nullable=False)
+    attendece = db.Column(db.Integer, nullable=False)
+    conducted = db.Column(db.Boolean, nullable=False)
+    __table_args__ = (db.UniqueConstraint('shg_id', 'meeting_date'),)
 
+class meetingAttendence(db.Model):
+    __tablename__ = 'meeting_attendence'
+    id = db.Column(db.Integer, primary_key=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
+    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
+    attended = db.Column(db.Boolean, nullable=False)
+
+class memberReceipts(db.Model):
+    __tablename__ = 'member_receipts'
+    id = db.Column(db.Integer, primary_key=True)
+    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
+    # receipt_date = db.Column(db.Date, nullable=False)
+    receipt_amount = db.Column(db.Integer, nullable=False)
+    receipt_type = db.Column(db.String(20), nullable=False)
+
+    # @validates('receipt_amount')
+    # def validate_receipt_amount(self, key, value):
+    #     if value <= 0:
+    #         raise AssertionError('Receipt amount cannot be negative')
+    #     return value
+    
+    # @validates('receipt_type')
+    # def validate_receipt_type(self, key, value):
+    #     if value not in ['Savings', 'Fine', 'LoanRepayment', 'InterestRepayment']:
+    #         raise AssertionError('Receipt type is not valid')
+    #     return value
+
+class otherReceipts(db.Model):
+    __tablename__ = 'other_receipts'
+    id = db.Column(db.Integer, primary_key=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
+    receipt_date = db.Column(db.Date, nullable=False)
+    receipt_amount = db.Column(db.Integer, nullable=False)
+    receipt_type = db.Column(db.String(20), nullable=False)
+
+    # @validates('receipt_type')
+    # def validate_receipt_type(self, key, value):
+    #     if value not in ['Loan', 'Interest', 'LoanRepayment', 'InterestRepayment']:
+    #         raise AssertionError('Receipt type is not valid')
+    #     return value
+
+class memberPayments(db.Model):
+    __tablename__ = 'member_payments'
+    id = db.Column(db.Integer, primary_key=True)
+    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
+    payment_date = db.Column(db.Date, nullable=False)
+    payment_amount = db.Column(db.Integer, nullable=False)
+    payment_type = db.Column(db.String(20), nullable=False) #Loan / Savings_Return
+
+    # @validates('payment_type')
+    # def validate_payment_type(self, key, value):
+    #     if value not in ['Savings', 'Fine', 'Loan', 'Interest']:
+    #         raise AssertionError('Payment type is not valid')
+    #     return value  
+
+class otherPayments(db.Model):
+    __tablename__ = 'other_payments'
+    id = db.Column(db.Integer, primary_key=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
+    payment_date = db.Column(db.Date, nullable=False)
+    payment_amount = db.Column(db.Integer, nullable=False)
+    payment_type = db.Column(db.String(20), nullable=False) # Bank Emi / Interest / Traavelling / etc
+
+    # @validates('payment_type')
+    # def validate_payment_type(self, key, value):
+    #     if value not in ['Loan', 'Interest']:
+    #         raise AssertionError('Payment type is not valid')
+    #     return value

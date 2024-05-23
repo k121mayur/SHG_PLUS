@@ -1,11 +1,12 @@
 <template>
+  <div>
   <div class="z-100 text-danger" v-if="!shg_status" style="margin: auto; font-size: 20px">  You Can't Add a member without adding a SHG</div>
   <div class="container" v-if="shg_status">
-    <h1>Member Registration Form</h1>
+    <h1 class="text-center mx-0 px-0 col-md-12">Member Registration Form</h1>
     <form @submit.prevent="addMember">
       <div class="row">
         
-        <div class="col-md-6">
+        <div class="col-md-6 border-right">
           <h2>Member Information</h2>
           <div class="form-group">
             <label for="shg_id">SHG Name:</label>
@@ -243,9 +244,10 @@
         
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" :disabled="!shg_status">Submit</button>
+      <button type="submit" class="btn btn-primary my-3" :disabled="!shg_status">Add Member</button>
     </form>
   </div>
+</div>
 </template>
 
 <script>

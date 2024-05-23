@@ -1,6 +1,6 @@
 Flask
 Gunicorn
-flask_security
+Flask-Security-Too
 werkzeug
 email_validator
 jwt

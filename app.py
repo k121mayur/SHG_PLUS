@@ -10,5 +10,6 @@ with app.app_context():
 
 import Add_Roles
 import Add_Users
+import Add_Group
 
 app.run(host = "0.0.0.0", port=5000, debug=True)

@@ -5,11 +5,11 @@ from flask_restful import Resource
 from flask_restful import fields, marshal_with, marshal_with_field
 from flask_restful import reqparse
 from flask_security import auth_required, roles_required, hash_password
-from jwt import decode
 from email_validator import validate_email
 from datetime import datetime
 from sqlalchemy import func
 from application.app import user_datastore
+from sqlalchemy import func
 
 
 class userApi(Resource):
@@ -46,7 +46,8 @@ class userApi(Resource):
       return jsonify(True)
 
 class shgApi(Resource):
-
+    @auth_required('token')
+    @roles_required('manager', 'operator')
     def get(self):
        all_shgs = db.session.query(SHG).all()
        all_shgs = [{'name': shg.shg_name, 'value': shg.id, 'village' : shg.village_name} for shg in all_shgs]
@@ -186,11 +187,65 @@ class memberApi(Resource):
         members_list = [{'name': member.first_name + ' ' + member.father_husband_name + ' ' + member.last_name, 'value': member.member_id} for member in members_list]
 
         return jsonify(members_list)
-
-
    
+   # List of members present in the meeting
+   def get(self, meeting_id):
+        members_id = db.session.query(meetingAttendence.member_id).filter(meetingAttendence.meeting_id == meeting_id, meetingAttendence.attended == 1).all()
+        members_list = []
+        for member_id in members_id:
+            member = db.session.query(members).filter(members.member_id == member_id[0]).first()
+            members_list.append({'name': member.first_name + ' ' + member.father_husband_name + ' ' + member.last_name, 'value': member.member_id})
+
+        return jsonify(members_list)
+
 class shgBankAccountApi(Resource):
    def post(self):
       pass
 
+class meetingApi(Resource):
+   def post(self):
+      try:
+        data = request.json
+        attendece = 0
+        for i in data['attendece']:
+          if i['present']:
+              attendece += 1
 
+        new_meeting = meetings(
+              shg_id=data['shg']['value'],  # Assuming `id` is the correct identifier
+              meeting_date = datetime.strptime(data['date'], "%Y-%m-%d").date(), 
+              attendece = attendece,
+              conducted = True if attendece > 0 else False
+          )
+        db.session.add(new_meeting)
+
+        max_id = meetings.query.with_entities(func.max(meetings.id)).first()
+        max_id = int(max_id[0]) + 1 if max_id[0] is not None else 1
+
+        for a in data['attendece']:
+          member_attendece = meetingAttendence(
+                member_id = a['value'],
+                meeting_id = max_id, 
+                attended = a['present']
+          )
+
+          db.session.add(member_attendece)
+        
+        db.session.commit()
+      except Exception as e:
+        # Rollback the transaction in case of any error
+        db.session.rollback()
+        return {'message': f'Error saving meeting data: {str(e)}'}, 500
+      return jsonify({"status": True})
+   
+   def get(self, shg_id):
+        print(shg_id)
+        meetings_list = meetings.query.filter(meetings.shg_id == shg_id).all()
+        print(meetings_list)
+        meetings_list = [{'name': datetime.strftime(meeting.meeting_date, "%d-%m-%Y"), 'date': meeting.meeting_date, 'value': meeting.id} for meeting in meetings_list]
+
+        return jsonify(meetings_list)   
+      
+class memberReceiptApi(Resource):
+   def post(self):
+      data = request.json

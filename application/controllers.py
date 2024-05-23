@@ -10,7 +10,7 @@ from datetime import timedelta
 import os
 from email_validator import validate_email
 from application.models import *
-import jwt
+
 
 @app.route("/")
 def index():

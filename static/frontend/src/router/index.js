@@ -4,7 +4,7 @@ import dashboardView from '../views/dashboardView.vue'
 import dataEntryView from '../views/dataEntryView.vue'
 import newGroupEntryView from '@/views/newGroupEntryView.vue'
 import newMemberEntryView from '@/views/newMemberEntryView.vue'
-
+import meetingWorkflowView from '@/views/meetingWorkflowView.vue'
 
 const routes = [
   {
@@ -45,6 +45,12 @@ const routes = [
     path: '/newMember',
     name: 'newMember',
     component: newMemberEntryView
+  },
+  {
+    path: '/meetingWorkflow/:meeting_id',
+    name: 'newMember',
+    props: true,
+    component: meetingWorkflowView
   }
 
 ]

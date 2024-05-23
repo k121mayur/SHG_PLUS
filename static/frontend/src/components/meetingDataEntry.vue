@@ -1,10 +1,12 @@
 <template>
     <div>
     <h1> Data Entry</h1>
+
+        <form @submit.prevent="addMeeting">
         <div class="d-flex flex-row align-items-center justify-content-center">
             <label for="shg" class="m-3">Select SHG</label>
             <VueMultiselect
-            @focusout="fetchMembers"
+            @focusout="fetchMembers(); fetchMeetings();"
             id="shg"
             class="custom m-3"
             label="name"
@@ -15,31 +17,39 @@
             
             </VueMultiselect>
         </div>
-        <div id="meetings_list" v-if="!meetings_list.length == 0" >
-            <ul class="list-group mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
-                <li class="list-group-item" style="background-color: antiquewhite;">List of Meetings</li>
-                <li  class="list-group-item" v-for="meet in meetings_list">{{meet.name}}</li>
 
-            </ul>
-        </div>
+       
         <div class="form-group d-flex flex-row align-items-center justify-content-center">
             
             <label for="date" >Date of Meeting</label>
-            <input type="date" id="date" class="form-control mx-3" name="date">
+            <input type="date" id="date" class="form-control mx-3" name="date" v-model="meeting_date" required/>
+        </div>
+
+         <!-- List of meetings -->
+         <div id="meetings_list" class="m-3" v-if="!meetings_list.length == 0" >
+            <ul class="list-group mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
+                <li class="list-group-item" style="background-color: antiquewhite;">List of Meetings</li>
+                <li  class="list-group-item" v-for="meet in meetings_list">{{meet.name}} <RouterLink class="btn btn-primary mx-3" :to="`/meetingWorkflow/${meet.value}`" >Edit</RouterLink></li>
+            </ul>
         </div>
 
         <!-- list of members -->
-        <div class="m-3 mx-3" v-if ="!members_list.length == 0" > 
-            <ul>
-                <li class="list-group-item" style="background-color: antiquewhite;">Member Attendence</li>
-                <li v-for="member in members_list" class="list-group-item" >
-                    <input type="checkbox" id ="member"  class="m-3" name="{{member.name}}" value="{{member.name}}">
+        <div class="m-3"  style="border-radius: 20px; overflow: auto" v-if ="!members_list.length == 0" > 
+            <ul class="list-group d-flex flex-column align-items-left justify-content-start mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
+                <li class="list-group-item" style="background-color: antiquewhite; text-align: center; padding-top: 3px; color: darkblue">Member Attendence</li>
+                <li v-for="member in members_list" class="list-group-item d-flex flex-row justify-content-start align-items-center"  style="padding-left: 3rem;">
+                    <input type="checkbox" id ="member"  class="m-3" :name="member.name" :value="member.value" v-model="member.present"/>
                     <label>{{member.name}}</label>
                 </li>
             </ul>
         
         </div>
 
+        <!-- Create meeting Button -->
+            <div> 
+                <button class="btn btn-primary my-3 mx-3" type="submit">Add Meeting</button>
+            </div>
+        </form>
     </div>
 
 
@@ -61,8 +71,10 @@ export default {
             shg_list: [],
             shg_name:'',
             meetings_list : [], 
-            members_list : [{name:"Mayur"}],
-            status : false
+            members_list : [],
+            status : false, 
+            meeting_date: new Date().toISOString().slice(0, 10)
+
         }
     }, 
 
@@ -77,9 +89,44 @@ export default {
     }, 
     fetchMembers(){
         axios.get("/api/v1/member/" + this.shg_name.value, { headers: { 'Token': localStorage.getItem('token') } } ).then((response) =>{
-        this.members_list = response.data
+            
+            this.members_list = response.data.map(member => ({
+          ...member,
+          present: false // Add a 'present' property to track checkbox state
+        }));
         
         })
+  }, 
+
+  fetchMeetings(){
+
+    axios.get("/api/v1/meeting/" + this.shg_name.value, { headers: { 'Token': localStorage.getItem('token') } } ).then((response) =>{
+        this.meetings_list =  response.data
+  })
+},
+
+  addMeeting(){
+    let data = {}
+    data.shg = this.shg_name
+    data.attendece = this.members_list
+    data.date = this.meeting_date
+    axios.post('/api/v1/meeting', data, {headers: {'Token': localStorage.getItem('toekn')}}).then( (response ) => {
+        console.log(response);
+        if(response.status == 200){
+            this.$router.push('/meetingWorkflow/' + this.shg_name.value)
+            alert("Meeting Successfully added")
+        }
+
+        if(response.status == 500){
+            alert(response.data.message)
+
+        }
+
+    }).catch((error) => {
+        alert(error.response.data.message)
+    })
+
+
   }
 },
  created() {

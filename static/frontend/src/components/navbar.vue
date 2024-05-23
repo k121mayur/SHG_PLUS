@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand mx-2" href="#">
-            <img src="http://akrsp.org.pk/wp-content/uploads/2023/07/AKRSP.png" width="40" height="40" class="d-inline-block align-top" alt="">
+            <img src="/img/AKRSP.png" width="40" height="40" class="d-inline-block align-top" alt="">
         </a>
         <h4 class="m-2 text-white">SHG PLUS</h4>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
