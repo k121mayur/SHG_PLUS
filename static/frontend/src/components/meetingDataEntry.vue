@@ -110,11 +110,16 @@ export default {
     data.shg = this.shg_name
     data.attendece = this.members_list
     data.date = this.meeting_date
-    axios.post('/api/v1/meeting', data, {headers: {'Token': localStorage.getItem('toekn')}}).then( (response ) => {
+    axios.post('/api/v1/meeting', data, {headers: {'Token': localStorage.getItem('token')}}).then( (response ) => {
         console.log(response);
         if(response.status == 200){
-            this.$router.push('/meetingWorkflow/' + this.shg_name.value)
+            console.log(response.data)
+            this.$router.push('/meetingWorkflow/' + response.data.meeting_id)
             alert("Meeting Successfully added")
+        }
+
+        if(response.status == 400){
+            alert("You can't add meeting with no members")
         }
 
         if(response.status == 500){

@@ -18,11 +18,11 @@
             <a href="#">Shareout</a>
         </div class="element">
         <div class="element"> 
-            <a href="/newMember">Add / Remove Member</a>
+            <RouterLink to="/newMember">Add / Remove Member</RouterLink>
         </div class="element">
 
         <div class="element"> 
-            <a href="/newGroup">New Group Entry </a>
+            <RouterLink to="/newGroup">New Group Entry</RouterLink>
         </div>
 
         <div class="element"> 

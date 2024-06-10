@@ -48,7 +48,7 @@ const routes = [
   },
   {
     path: '/meetingWorkflow/:meeting_id',
-    name: 'newMember',
+    name: 'meetingWorkflow',
     props: true,
     component: meetingWorkflowView
   }

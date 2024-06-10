@@ -3,7 +3,7 @@
         <form @submit.prevent="submitForm">
         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 5%;">
             <label for="memberName" class="form-label">Member Name</label>
-            <select class="form-select mx-3" id="memberName" v-model="receiptData.member_name" style="width: max-content;">
+            <select class="form-select mx-3" id="memberName" v-model="receiptData.member_id" style="width: max-content;">
                 <option v-for="member in members_list" :value="member.value">{{member.name}}</option>
             </select>
 
@@ -68,7 +68,7 @@ export default {
     return {
         receiptData: {
             meeting_id: this.meeting_id,
-            member_name: '',
+            member_id: '',
             receipt_date: '',
             receipt_amount: 0,
             savings: 0,
@@ -82,6 +82,10 @@ export default {
         submitForm() {  
             axios.post('/api/v1/memberReceipt', this.receiptData ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
                 if(response.status == 200){
+                    this.receiptData.savings = 0
+                    this.receiptData.principal = 0
+                    this.receiptData.interest = 0 
+                    this.receiptData.fine = 0
                     alert("Receipt added Successfully!")
                 }else{
                     alert("Problem")

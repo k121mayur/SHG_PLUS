@@ -29,3 +29,10 @@ def login():
 def role():
     role = current_user.roles[0].name
     return jsonify(role) 
+
+@auth_required('token')
+@roles_required('manager', 'operator')
+@app.route("/shgID/<int:meeting_id>")
+def shgID(meeting_id):
+    shg_id = db.session.query(meetings.shg_id).filter(meetings.id == meeting_id).first()[0]
+    return jsonify({"shg_id" : shg_id})

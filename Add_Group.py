@@ -1,5 +1,5 @@
 from application.database import db
-from application.models import SHG, members
+from application.models import SHG, members, shgBankAccount
 from datetime import datetime
 
 check = db.session.query(SHG.shg_name == "TEST SHG").first()
@@ -120,6 +120,48 @@ if check is None:
 if  check_1 is None:
     db.session.add(new_member_1)
     
-
-
 db.session.commit()
+
+
+loan_account_check = db.session.query(shgBankAccount.account_number == "0012229384755").first()
+saving_account_check = db.session.query(shgBankAccount.account_number == "00122293847551").first()
+
+print(loan_account_check)
+print(saving_account_check)
+
+shg_loan_account = shgBankAccount(
+    id = 1,
+    account_type = "loan",
+    bank_name = "HDFC Bank",
+    branch = "Gaya",
+    account_name = "TEST SHG",
+    account_number = "0012229384755",
+    IFSC_code = "HDFC0000012",
+    shg_id = 1,
+    balance = 100000
+)
+
+
+shg_saving_account = shgBankAccount(
+    id = 2,
+    account_type = "savings",
+    bank_name = "HDFC Bank",
+    branch = "Gaya",
+    account_name = "TEST SHG",
+    account_number = "00122293847551",
+    IFSC_code = "HDFC0000012",
+    shg_id = 1,
+    balance = 100000
+)
+
+if loan_account_check is None:
+    db.session.add(shg_loan_account)
+    print("loan account added")
+    db.session.commit()
+
+if saving_account_check is None:
+    db.session.add(shg_saving_account)
+    print("Savings account added")
+    db.session.commit()
+
+print("Done!")

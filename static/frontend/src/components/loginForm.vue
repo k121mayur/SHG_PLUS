@@ -15,7 +15,7 @@
             </div>
             <div class="form-group my-3 d-flex flex-row justify-content-end">
                 <label for="exampleInputEmail1" style="text-wrap: nowrap;" class="m-3" >Email address</label>
-                <input type="email" v-model="email" class="form-control" id="exampleInputEmail1" style="width: 70%;" aria-describedby="emailHelp" placeholder="Enter email" required>
+                <input type="text" v-model="email" class="form-control" id="exampleInputEmail1" style="width: 70%;" aria-describedby="emailHelp" placeholder="Enter email" required>
 
             </div>
             <div class="form-group d-flex flex-row justify-content-end">
@@ -36,7 +36,7 @@
 </style>
 
 
-JavaScript
+
 <script>
 import { server } from '@/main'
 import axios from 'axios'
@@ -59,6 +59,7 @@ export default {
       localStorage.setItem('role', "");
       localStorage.setItem('token', "");
       try {
+        axios.get("/logout")
         const response = await axios.post('/login?include_auth_token', {
           email: this.email,
           password: this.password,
