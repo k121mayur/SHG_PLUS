@@ -3,7 +3,7 @@
         <form @submit.prevent="submitForm">
         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 5%;">
             <label for="memberName" class="form-label">Member Name</label>
-            <select class="form-select mx-3" id="memberName" v-model="receiptData.member_name" style="width: max-content;">
+            <select class="form-select mx-3" id="memberName" v-model="receiptData.member_id" style="width: max-content;">
                 <option v-for="member in members_list" :value="member.value">{{member.name}}</option>
             </select>
             <!-- <input type="text" class="form-control" id="memberName" v-model="receiptData.member_name" required> -->
@@ -27,8 +27,8 @@
             </div>
 
             <div class="mb-3 col-md-6">
-                <label for="loan" class="form-label">Loan Amount</label>
-                <input type="number" class="form-control short mx-3" id="loan" v-model="receiptData.loan">
+                <label for="loanAmount" class="form-label">Loan Amount</label>
+                <input type="number" class="form-control short mx-3" id="loanAmount" v-model="receiptData.loan_amount" min="100" required>
             </div>
         </div>
 
@@ -46,7 +46,7 @@
             
             <div class="mb-3 col-md-12 ">
                     <label for="savings" class="form-label">Savings Return Amount</label>
-                    <input type="number" class="form-control short mx-3" id="savings" v-model="receiptData.principal">
+                    <input type="number" class="form-control short mx-3" id="savings" v-model="receiptData.savings_return_amount">
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -90,28 +90,49 @@ export default {
     return {
         loanPurposeList : [],
         receiptData: {
+            paymentType: 0,
             meeting_id: this.meeting_id,
-            member_name: '',
-            receipt_date: '',
-            receipt_amount: 0,
-            loan: 0,
-            principal: 0,
-            interest: 0,
-            fine: 0
+            member_id: '',
+            loan_amount: 0,
+            savings_return_amount: 0,
+            savingsReturnReason : '',
+            loan_purpose : ''
+
         }
     }
     },
     methods : {
         submitForm() {  
-            axios.post('/api/v1/memberPayment', this.receiptData ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
-                if(response.status == 200){
-                    alert("Receipt added Successfully!")
-                }else{
-                    alert("Problem")
-                }
-            }).catch((error) => {
-                alert(error.data)
-            })
+            if (this.receiptData.paymentType == 0) {
+                console.log("0")
+                axios.post('/api/v1/memberLoanPayments', this.receiptData ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
+                    if(response.status == 200){
+                        alert("Receipt added Successfully!")
+                    }else{
+                        alert("Problem")
+                    }
+                }).catch((error) => {
+                    alert(error.data)
+                })
+
+
+
+            }
+            else if (this.receiptData.paymentType == 1) {
+                console.log("1")
+                axios.post('/api/v1/memberSavingsPayments', this.receiptData ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
+                    if(response.status == 200){
+                        alert("Receipt added Successfully!")
+                    }else{
+                        alert("Problem")
+                    }
+                }).catch((error) => {
+                    alert(error.data)
+                })
+            
+            }
+
+           
     }, 
 
     getLoanPurposeList(){

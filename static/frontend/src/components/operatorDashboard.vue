@@ -76,14 +76,15 @@ export default {
     }, 
     methods: {
         fetchGroups() {
-            axios.get('/api/operator/dashboard').then(response => {
-                this.total_groups = response.data.total_groups
+            axios.get('/api/v1/operatorDashboard').then(response => {
+                this.total_groups = response.data.number_of_groups
+                this.data_entry = response.data.entry_completed_groups
             })
         }
 
     },
     created() {
-        // this.fetchGroups()
+        this.fetchGroups()
     }
 }
 </script>

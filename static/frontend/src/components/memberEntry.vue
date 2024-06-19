@@ -65,6 +65,8 @@
           <div class="form-group">
             <label for="education">Education:</label>
             <select class="form-control" id="education" v-model="formData.education">
+              <option value="Illiterate">Illiterate</option>
+              <option value="Litrate">Litrate</option>
               <option value="Primary">Primary</option>
               <option value="Secondary">Secondary</option>
               <option value="Higher Secondary">Higher Secondary</option>
@@ -89,85 +91,7 @@
           <div class="form-group">
             <label for="caste">Caste:</label>
             <!-- Add options here -->
-            <select class="form-control" id="caste" v-model="formData.caste">
-              <option value='Yadav (Ahir, Gowala, Gora, Ghasi, Mehar and Sadgop)' >Yadav (Ahir, Gowala, Gora, Ghasi, Mehar and Sadgop)</option>
-              <option value='Dushadh (Dhari, Dharahi)' >Dushadh (Dhari, Dharahi)</option>
-              <option value='Ravidas (Mochi, Ravidas, Rohidas, Charmkar)' >Ravidas (Mochi, Ravidas, Rohidas, Charmkar)</option>
-              <option value='Kushwaha (Koeri)' >Kushwaha (Koeri)</option>
-              <option value='Shaikh (caste) (Muslim)' >Shaikh (caste) (Muslim)</option>
-              <option value='Brahmin' >Brahmin</option>
-              <option value='Momin (Muslim)/Julaha/Ansari (Muslim)' >Momin (Muslim)/Julaha/Ansari (Muslim)</option>
-              <option value='Rajput' >Rajput</option>
-              <option value='Musahar' >Musahar</option>
-              <option value='Kurmi' >Kurmi</option>
-              <option value='Bhumihar' >Bhumihar</option>
-              <option value='Teli' >Teli</option>
-              <option value='Mallah (Nishad)' >Mallah (Nishad)</option>
-              <option value='Bania(Sudhi, Modak/Mamas, Roniyar, Pansari, Modi, Karora, Kesharvani, Thathera, Kalwar (Kalal/Iraqi), (Vigahut Kalwar), Kamlapuri Vaishya, Mahuri Vaishya, Bangi Vaishya (Bangali Baniya), Baranwal Vaishya, Agrahari Vaishya, Vaishya Poddar, Kasaudhan, Gandhbanik, Batham Vaishya, Goldar (East/Wesh Champaran)' >Bania(Sudhi, Modak/Mamas, Roniyar, Pansari, Modi, Karora, Kesharvani, Thathera, Kalwar (Kalal/Iraqi), (Vigahut Kalwar), Kamlapuri Vaishya, Mahuri Vaishya, Bangi Vaishya (Bangali Baniya), Baranwal Vaishya, Agrahari Vaishya, Vaishya Poddar, Kasaudhan, Gandhbanik, Batham Vaishya, Goldar (East/Wesh Champaran)</option>
-              <option value='Kanu' >Kanu</option>
-              <option value='Dhanuk' >Dhanuk</option>
-              <option value='Nonia' >Nonia</option>
-              <option value='Surjapuri Muslim ( except Sheikh, Syed, Mullick, Mughal, Pathan) (Muslim)' >Surjapuri Muslim ( except Sheikh, Syed, Mullick, Mughal, Pathan) (Muslim)</option>
-              <option value='Pan, Sawasi, Panar' >Pan, Sawasi, Panar</option>
-              <option value='Nai' >Nai</option>
-              <option value='Chandravanshi (Kahar, Kamkar)' >Chandravanshi (Kahar, Kamkar)</option>
-              <option value='Barhai (carpenter)' >Barhai (carpenter)</option>
-              <option value='Dhuniya (Muslim)' >Dhuniya (Muslim)</option>
-              <option value='Kumhar (Prajapati)' >Kumhar (Prajapati)</option>
-              <option value='Rayeen or Kunjra (Muslim)' >Rayeen or Kunjra (Muslim)</option>
-              <option value='Shershahbadi (Muslim)' >Shershahbadi (Muslim)</option>
-              <option value='Pasi' >Pasi</option>
-              <option value='Bind' >Bind</option>
-              <option value='Kulhaiya (Muslim)' >Kulhaiya (Muslim)</option>
-              <option value='Bhuiya' >Bhuiya</option>
-              <option value='Dhobi (Rajak)' >Dhobi (Rajak)</option>
-              <option value='Pathan (Khan) (Muslim)' >Pathan (Khan) (Muslim)</option>
-              <option value='Sonar' >Sonar</option>
-              <option value='Kayastha' >Kayastha</option>
-              <option value='Sai/Faqeer/Diwan/Madar (Muslim)' >Sai/Faqeer/Diwan/Madar (Muslim)</option>
-              <option value='Gangota (Gangaputra)' >Gangota (Gangaputra)</option>
-              <option value='Barai, Tamoli, Chaurasiya' >Barai, Tamoli, Chaurasiya</option>
-              <option value='Dhobi (Muslim)' >Dhobi (Muslim)</option>
-              <option value='Pal (Bhedihar,gaderi, gaderiya)' >Pal (Bhedihar,gaderi, gaderiya)</option>
-              <option value='Mali' >Mali</option>
-              <option value='Dangi' >Dangi</option>
-              <option value='Idrisi or Darzi (Muslim)' >Idrisi or Darzi (Muslim)</option>
-              <option value='Syed (Muslim)' >Syed (Muslim)</option>
-              <option value='Dom, Dhangadh, Bansfor, Dharikar, Dharkar, Domra' >Dom, Dhangadh, Bansfor, Dharikar, Dharkar, Domra</option>
-              <option value='Hari Mehtar, Bhangi' >Hari Mehtar, Bhangi</option>
-              <option value='Rajbhar' >Rajbhar</option>
-              <option value='Chudihar (Muslim)' >Chudihar (Muslim)</option>
-              <option value='Thakurai (Muslim)' >Thakurai (Muslim)</option>
-              <option value='Qasab (Qasai) (Muslim)' >Qasab (Qasai) (Muslim)</option>
-              <option value='Mullick (Muslim)' >Mullick (Muslim)</option>
-              <option value='Nat' >Nat</option>
-              <option value='Bhat (Muslim)' >Bhat (Muslim)</option>
-              <option value='Madariya (Only for Sanhaul block of Bhagalpur and Dhoriya block of Banka) (Muslim)' >Madariya (Only for Sanhaul block of Bhagalpur and Dhoriya block of Banka) (Muslim)</option>
-              <option value='Daphali (Muslim)' >Daphali (Muslim)</option>
-              <option value='Mehtar, Lalbegi, Halalkhor, Bhangi (Muslim)' >Mehtar, Lalbegi, Halalkhor, Bhangi (Muslim)</option>
-              <option value='Morshikar(Muslim)' >Morshikar(Muslim)</option>
-              <option value='Pamaria (Muslim)' >Pamaria (Muslim)</option>
-              <option value='Nat (Muslim)' >Nat (Muslim)</option>
-              <option value='Gaddi (Muslim)' >Gaddi (Muslim)</option>
-              <option value='Mukairi (Muslim)' >Mukairi (Muslim)</option>
-              <option value='Cheeq (Muslim)' >Cheeq (Muslim)</option>
-              <option value='Jat (Muslim (Madhubani, Darbhanga, Sitamadhi, Khagaria & Araria) (Muslim)' >Jat (Muslim (Madhubani, Darbhanga, Sitamadhi, Khagaria & Araria) (Muslim)</option>
-              <option value='Rangrez (Muslim)' >Rangrez (Muslim)</option>
-              <option value='Bakho (Muslim)' >Bakho (Muslim)</option>
-              <option value='Bhathiyara (Muslim)' >Bhathiyara (Muslim)</option>
-              <option value='Sainthwar' >Sainthwar</option>
-              <option value='Saikalgarg (Muslim)' >Saikalgarg (Muslim)</option>
-              <option value='Qadar (Muslim)' >Qadar (Muslim)</option>
-              <option value='Miriyasin (Muslim)' >Miriyasin (Muslim)</option>
-              <option value='Nalband (Muslim)' >Nalband (Muslim)</option>
-              <option value='Christian Convert (EBC)' >Christian Convert (EBC)</option>
-              <option value='Madari (Muslim)' >Madari (Muslim)</option>
-              <option value='Abdal (Muslim)' >Abdal (Muslim)</option>
-              <option value='Christian Convert (Harijan)' >Christian Convert (Harijan)</option>
-              <option value='Itfarosh/Itafarosh/Gadheri/Itpaz Ibrahimi (Muslim)' >Itfarosh/Itafarosh/Gadheri/Itpaz Ibrahimi (Muslim)</option>
-              <option value='Qalandar (Muslim)' >Qalandar (Muslim)</option>
-              <option value='Qaghzi(Muslim)' >Qaghzi(Muslim)</option>
-            </select>
+            <input type="text" class="form-control" id="caste" v-model="formData.caste">
           </div>
         </div>
         <div class="col-md-6">
@@ -183,11 +107,11 @@
           </div>
           <div class="form-group">
             <label for="total_land_kattha">Total Land (Kattha):</label>
-            <input type="number" class="form-control" id="total_land_kattha" v-model="formData.total_land_kattha">
+            <input type="number" step=".01" class="form-control" id="total_land_kattha" v-model="formData.total_land_kattha">
           </div>
           <div class="form-group">
             <label for="total_irrigated_land_kattha">Total Irrigated Land (Kattha):</label>
-            <input type="number" class="form-control" id="total_irrigated_land_kattha" v-model="formData.total_irrigated_land_kattha">
+            <input type="number" step=".01" class="form-control" id="total_irrigated_land_kattha" v-model="formData.total_irrigated_land_kattha">
           </div>
           <div class="form-group">
             <label for="total_no_of_goats">Total No. of Goats:</label>
@@ -227,17 +151,32 @@
             <input type="text" class="form-control" id="IFSC_code" v-model="formData.IFSC_code">
           </div>
         </div>
-        <div class="col-md-12 border p-3 m-2 d-flex flex-row custom-scheme-div" >
-          <div class="col-md-6 d-flex flex-column align-items-center">
+        <div class="col-md-12 border p-3 m-2 d-flex flex-row custom-scheme-div flex-wrap" >
+          <div class="col-md-6 d-flex flex-column align-items-start">
             <div class="">
                 <input class="m-1" type="checkbox" id="scheme_1" name="scheme_1" value="scheme_1" v-model ="formData.scheme_1">
-                <label for="Scheme_1" class="m-1"> Scheme 1</label><br>
+                <label for="Scheme_1" class="m-1">Ayushman Bharat</label><br>
             </div>
           </div>
-          <div class="col-md-6 d-flex flex-column align-items-center">
+          <div class="col-md-6 d-flex flex-column align-items-start">
             <div class="">
                 <input class="m-1" type="checkbox" id="scheme_2" name="scheme_2" value="scheme_2" v-model ="formData.scheme_2">
-                <label for="Scheme_2" class="m-1"> Scheme 2</label><br>
+                <label for="Scheme_2" class="m-1"> Pradhan Mantri Jivan Jyoti Yojana</label><br>
+            </div>
+          
+          </div>
+          <div class="col-md-6 d-flex flex-column align-items-start">
+            <div class="">
+                <input class="m-1" type="checkbox" id="scheme_2" name="scheme_2" value="scheme_2" v-model ="formData.scheme_3">
+                <label for="Scheme_2" class="m-1">Pradhan Mantri Surksha Bima Yojana</label><br>
+            </div>
+          
+          </div>
+
+          <div class="col-md-6 d-flex flex-column align-items-start">
+            <div class="">
+                <input class="m-1" type="checkbox" id="scheme_2" name="scheme_2" value="scheme_2" v-model ="formData.scheme_4">
+                <label for="Scheme_2" class="m-1">Labour Card</label><br>
             </div>
           
           </div>
@@ -296,7 +235,9 @@ export default {
         IFSC_code: '',
 
         scheme_1: false,
-        scheme_2: false
+        scheme_2: false,
+        scheme_3: false,
+        scheme_4: false
       }
     };
   },
@@ -307,7 +248,6 @@ export default {
     ).then((response) => {
       if (response === 200){
         alert("Member Added Successfully")
-
       }
     })
   }, 

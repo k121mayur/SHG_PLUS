@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from application.database import db
+from flask_migrate import Migrate
 from application.models import *
 from flask_restful import Api
 from flask_cors import CORS
@@ -22,6 +23,8 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:8080", "supports_crede
 # CORS(app, resources={r"/*": {"origins": "http://localhost:8080", "allow_headers": ["Authentication-Token", "Content-Type"]}})
 
 api = Api(app)
+
+migrate = Migrate(app, db)
 
 
 SQLITE_DB_DIR = os.path.join(basedir, "../database")
@@ -61,7 +64,7 @@ from application.controllers import *
 from application.api import *
 
 # api.add_resource(userApi, "/api/v1/user", "/api/v1/user/<int:user_id>")
-api.add_resource(shgApi, "/api/v1/shg", "/api/v1/shg/<int:shg_id>")
+api.add_resource(shgApi, "/api/v1/shg", "/api/v1/shg/<int:shg_id>", "/api/v1/shgs/byMonth/<int:month>")
 api.add_resource(memberApi, "/api/v1/member", "/api/v1/member/<int:shg_id>",  "/api/v1/meeting/member/<int:meeting_id>")
 api.add_resource(meetingApi, "/api/v1/meeting", "/api/v1/meeting/<int:shg_id>")
 api.add_resource(memberReceiptApi, "/api/v1/memberReceipt")
@@ -69,3 +72,11 @@ api.add_resource(shgBankAccountApi, "/api/v1/ShgAccount/<int:shg_id>", "/api/v1/
 api.add_resource(otherLoanReceiptsApi, "/api/v1/otherLoanReceipts")
 api.add_resource(otherSavingsReceiptsApi, "/api/v1/otherSavingsReceipts")
 api.add_resource(loanPurposeListApi, "/api/v1/loanPurposeList")
+api.add_resource(memberLoanPaymentsApi, "/api/v1/memberLoanPayments")
+api.add_resource(memberSavingsPaymentsApi, "/api/v1/memberSavingsPayments")
+api.add_resource(bankEmiPaymentsApi, "/api/v1/bankEmiPayments")
+api.add_resource(savingsAccountPaymentsApi, "/api/v1/savingsAccountPayments")
+api.add_resource(otherServiceChargePaymentsApi, "/api/v1/serviceChargePayments")
+api.add_resource(otherCashInHandPaymentsApi, "/api/v1/cashInHandPayments")
+
+api.add_resource(operatorDashboardApi, "/api/v1/operatorDashboard")

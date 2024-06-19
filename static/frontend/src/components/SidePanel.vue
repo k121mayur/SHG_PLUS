@@ -12,7 +12,7 @@
             <!-- <a href="">Group Data Entry</a> -->
         </div>
         <div class="element"> 
-           <a href="#"> Data Entry Report </a>
+            <RouterLink to="/dataEntryReport">Data Entry Report</RouterLink>
         </div>
         <div class="element"> 
             <a href="#">Shareout</a>

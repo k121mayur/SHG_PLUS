@@ -5,6 +5,7 @@ import dataEntryView from '../views/dataEntryView.vue'
 import newGroupEntryView from '@/views/newGroupEntryView.vue'
 import newMemberEntryView from '@/views/newMemberEntryView.vue'
 import meetingWorkflowView from '@/views/meetingWorkflowView.vue'
+import dataEntryReportView from '@/views/dataEntryReportView.vue'
 
 const routes = [
   {
@@ -33,6 +34,12 @@ const routes = [
     path: '/dataEntry',
     name: 'dataEntry',
     component: dataEntryView
+  },
+
+  {
+    path: '/dataEntryReport',
+    name: 'dataEntryReport',
+    component: dataEntryReportView
   },
 
   {

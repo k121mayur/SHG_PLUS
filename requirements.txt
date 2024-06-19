@@ -11,3 +11,4 @@ flask_sqlalchemy
 flask_caching
 flask_excel
 jinja2
+Flask-Migrate

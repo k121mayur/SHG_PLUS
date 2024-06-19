@@ -36,11 +36,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="saving_day" class="form-label">Saving Day (Day of the Month):</label>
-                        <input type="number" id="saving_day" name="saving_day" min="1" max="31" class="form-control" v-model="formData.saving_day" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="place_of_meeting" class="form-label">Place of Meeting:</label>
-                        <input type="text" id="place_of_meeting" name="place_of_meeting" class="form-control" v-model="formData.place_of_meeting" required>
+                        <select  id="saving_day" name="saving_day" class="form-select" v-model="formData.saving_day" required>
+                            <option value="1">Monday</option>
+                            <option value="2">Tuesday</option>
+                            <option value="3">Wednesday</option>
+                            <option value="4">Thursday</option>
+                            <option value="5">Friday</option>
+                            <option value="6">Saturday</option>
+                            <option value="7">Sunday</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-6 m-3">
@@ -57,23 +61,23 @@
                     <h5>Savings Account Details</h5>
                     <div class="mb-3">
                         <label for="bank_name" class="form-label">Bank Name:</label>
-                        <input type="text" id="bank_name" name="bank_name" class="form-control" v-model="formData.bank_name" required>
+                        <input type="text" id="bank_name" name="bank_name" class="form-control" v-model="formData.bank_name" >
                     </div>
                     <div class="mb-3">
                         <label for="branch" class="form-label">Branch Name:</label>
-                        <input type="text" id="branch" name="branch" class="form-control" v-model="formData.branch" required>
+                        <input type="text" id="branch" name="branch" class="form-control" v-model="formData.branch" >
                     </div>
                     <div class="mb-3">
                         <label for="account_name" class="form-label">Account Name:</label>
-                        <input type="text" id="account_name" name="account_name" class="form-control" v-model="formData.account_name" required>
+                        <input type="text" id="account_name" name="account_name" class="form-control" v-model="formData.account_name" >
                     </div>
                     <div class="mb-3">
                         <label for="account_number" class="form-label">Account Number:</label>
-                        <input type="text" id="account_number" name="account_number" class="form-control" v-model="formData.account_number" required>
+                        <input type="text" id="account_number" name="account_number" class="form-control" v-model="formData.account_number" >
                     </div>
                     <div class="mb-3">
                         <label for="IFSC_code" class="form-label">IFSC Code:</label>
-                        <input type="text" id="IFSC_code" name="IFSC_code" class="form-control" maxlength="11" minlength="11" v-model="formData.IFSC_code" required>
+                        <input type="text" id="IFSC_code" name="IFSC_code" class="form-control" maxlength="11" minlength="11" v-model="formData.IFSC_code" >
                     </div>
                     <h4>Share Details</h4>
                     <div class="mb-3">

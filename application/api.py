@@ -9,7 +9,7 @@ from email_validator import validate_email
 from datetime import datetime
 from sqlalchemy import func
 from application.app import user_datastore
-from sqlalchemy import func
+from application.controllers import internal_meeting_status
 
 
 class userApi(Resource):
@@ -46,13 +46,39 @@ class userApi(Resource):
       return jsonify(True)
 
 class shgApi(Resource):
-    @auth_required('token')
-    @roles_required('manager', 'operator')
-    def get(self):
-       all_shgs = db.session.query(SHG).all()
-       all_shgs = [{'name': shg.shg_name, 'value': shg.id, 'village' : shg.village_name} for shg in all_shgs]
-       return jsonify(all_shgs)
-    
+   #  @auth_required('token')
+   #  @roles_required('manager', 'operator')
+    def get(self, month=None):
+       if month:
+           return self.get_by_month(month)
+       else:
+          all_shgs = db.session.query(SHG).all()
+          all_shgs = [{'name': shg.shg_name, 'value': shg.id, 'village' : shg.village_name} for shg in all_shgs]
+          return jsonify(all_shgs)
+       
+
+    def get_by_month(self, month):
+       print(month)
+       all_meetings = db.session.query(meetings).filter(func.strftime('%m', meetings.meeting_date) == f'{month:02d}').all()
+       print(all_meetings)
+       data = []
+
+       for meeting in all_meetings:
+          
+          status = internal_meeting_status(meeting.id)
+          date_format = datetime.strptime(str(meeting.meeting_date), "%Y-%m-%d").strftime("%d-%m-%Y")
+          data.append({
+            "id" : meeting.id,
+            "name" : db.session.query(SHG.shg_name).filter(SHG.id == meeting.shg_id).first()[0],
+            "date"  : date_format,  
+            "status" : status["meeting_status"],
+            "action": "Entry" if status["status_class"] == "text-danger" else "Completed",
+          })
+
+       return jsonify(data)
+      
+   
+
     @auth_required('token')
     @roles_required('manager', 'operator')
     def post(self):
@@ -67,7 +93,6 @@ class shgApi(Resource):
         formation_date = datetime.strptime(data.get('formation_date'), "%Y-%m-%d").date()
         total_no_of_members = data.get('total_no_of_members')
         saving_day = data.get('saving_day')
-        place_of_meeting = data.get('place_of_meeting')
         staff_name = data.get('staff_name')
         samuh_sakhi_name = data.get('samuh_sakhi_name')
         bank_name = data.get('bank_name')
@@ -87,7 +112,6 @@ class shgApi(Resource):
             formation_date=formation_date,
             total_no_of_members=total_no_of_members,
             saving_day=saving_day,
-            place_of_meeting=place_of_meeting,
             staff_name=staff_name,
             samuh_sakhi_name=samuh_sakhi_name,
             per_share_size_in_INR=per_share_size_in_INR
@@ -102,17 +126,18 @@ class shgApi(Resource):
 
             shg_id = db.session.query(SHG.id).filter(SHG.shg_name == shg_name).first()[0]
 
-            new_bank_account = shgBankAccount(
-                shg_id=shg_id,
-                account_type='Savings',
-                bank_name=bank_name,
-                branch=branch,
-                account_name=account_name,
-                account_number=account_number,
-                IFSC_code=IFSC_code
-            )
+            if account_number:
+               new_bank_account = shgBankAccount(
+                  shg_id=shg_id,
+                  account_type='Savings',
+                  bank_name=bank_name,
+                  branch=branch,
+                  account_name=account_name,
+                  account_number=account_number,
+                  IFSC_code=IFSC_code
+               )
 
-            db.session.add(new_bank_account)
+               db.session.add(new_bank_account)
             try :
                 db.session.commit()
                 return {'message': 'SHG data saved successfully'}, 200
@@ -298,7 +323,8 @@ class memberReceiptApi(Resource):
            )
            db.session.add(new_saving_receipt)
         
-        elif int(amt) > 0 and type == "principal":
+        elif int(amt) > 0 and type == "principal": #principal
+           print("principal")
            new_loan_receipt = memberLoanRepaymentReceipts(
             meeting_id = meeting_id,
             member_id = member_id,
@@ -367,23 +393,140 @@ class otherSavingsReceiptsApi(Resource):
       return jsonify({"message": "Bank Withdrawal Receipt added successfully."})
 
 
+class memberLoanPaymentsApi(Resource):
+   def post(self):
+      data = request.json
+      meeting_id = data['meeting_id']
+      member_id = data['member_id']
+      receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
+      
+      new_receipt = memberLoanPayments(
+         meeting_id = meeting_id,
+         member_id = member_id,
+         payment_date = receipt_date,
+         payment_amount = data['loan_amount'],
+         loan_purpose = data['loan_purpose']
+      )
       db.session.add(new_receipt)
       db.session.commit()
-      return jsonify({"message": "Savings Receipt added successfully."})
 
-
-
-class memberPaymentsApi(Resource):
+class memberSavingsPaymentsApi(Resource):
    def post(self):
-      pass
+      data = request.json
+      meeting_id = data['meeting_id']
+      member_id = data['member_id']
+      receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
+      
+      new_receipt = memberSavingsPayments(   
+         meeting_id = meeting_id,
+         member_id = member_id,
+         payment_date = receipt_date,
+         payment_amount = data['savings_return_amount'],
+         reason = data['savingsReturnReason']
+      )
 
-class otherPaymentsApi(Resource):
+      db.session.add(new_receipt)
+      db.session.commit()
+      return jsonify({"message": "Receipt added successfully."})
+
+
+class bankEmiPaymentsApi(Resource):
    def post(self):
-      pass
+      data = request.json
+      meeting_id = data['meeting_id']
+      member_id = data['member_id']
+      receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
+      
+      new_receipt = bankEmiPayments(   
+         meeting_id = meeting_id,
+         member_id = member_id,
+         loan_account_id = data['loanAccountId'],
+         payment_date = receipt_date,
+         payment_amount = data['emi_amount'],
+         reason = data['emi_reason']
+      )
 
+      db.session.add(new_receipt)
+      db.session.commit()
+      return jsonify({"message": "Receipt added successfully."})
+
+
+class savingsAccountPaymentsApi(Resource):
+   def post(self):
+      data = request.json
+
+      meeting_id = data['meeting_id']
+      receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
+      
+      new_receipt = savingsAccountPayments(   
+         meeting_id = meeting_id,
+         savings_account_id = data['savingsAccountId'],
+         payment_date = receipt_date,
+         payment_amount = data['depositAmount']
+      )
+
+      db.session.add(new_receipt)
+      db.session.commit()
+      return jsonify({"message": "Receipt added successfully."})
+
+class otherServiceChargePaymentsApi(Resource):
+   def post(self):
+      data = request.json
+      meeting_id = data['meeting_id']
+      member_id = data['service_charge_member_id']
+      receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
+      
+      new_receipt = otherServiceChargePayments(   
+         meeting_id = meeting_id,
+         member_id = member_id,    
+         payment_date = receipt_date,   
+         payment_amount = data['service_charge_amount']
+      )
+
+      db.session.add(new_receipt)
+      db.session.commit()
+      return jsonify({"message": "Receipt added successfully."})
+
+class otherCashInHandPaymentsApi(Resource):
+   def post(self):
+      data = request.json
+      meeting_id = data['meeting_id']
+      member_id = data['cash_in_hand_member_id']
+      receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
+      
+      new_receipt = otherCashInHandPayments(
+         meeting_id = meeting_id,
+         member_id = member_id,
+         payment_date = receipt_date,
+         payment_amount = data['cash_in_hand_amount']
+      )
+
+      db.session.add(new_receipt)
+      db.session.commit()
+      return jsonify({"message": "Receipt added successfully."})
+   
 
 class loanPurposeListApi(Resource):
    def get(self):
       loan_purpose_list = db.session.query(loanPurposeList).all()
       loan_purpose_list = [{'name': purpose.loan_purpose, 'value': purpose.id} for purpose in loan_purpose_list]
       return jsonify(loan_purpose_list)
+   
+class operatorDashboardApi(Resource):
+   def get(self):
+      # Total Number of Groups
+      all_active_groups = db.session.query(SHG).filter(SHG.active == True).all()
+      total_number_of_groups = len(all_active_groups)
+
+      # This month Entry completed
+      entry_completed_groups = 0 
+
+      this_month = datetime.now().month
+      
+      this_month_meeting_entry = db.session.query(meetings).filter(func.strftime('%m', meetings.meeting_date) == f'{this_month:02d}').all()
+      
+      for meeting in this_month_meeting_entry:
+         if internal_meeting_status(meeting.id)['status_class'] == "text-success":
+            entry_completed_groups += 1
+
+      return jsonify({"number_of_groups": total_number_of_groups, "entry_completed_groups": entry_completed_groups})

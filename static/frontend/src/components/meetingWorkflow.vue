@@ -41,7 +41,7 @@
         </div>
 
         <div class="m-3 border p-2"> 
-            <h3>Meeting Status :</h3> 
+            <h4>Meeting Status :  <span :class="status_class">{{ Meeting_Status }}</span></h4> 
         </div>
 
         <div v-if ="memberReceiptsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
@@ -74,7 +74,7 @@
                     height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
                     
                 <h1 style="border-bottom: solid 1px black; padding: 1%;">Member Payments </h1> 
-                <memberPaymentForm :meeting_id = "meeting_id" :members_list = "members_list">
+                <memberPaymentForm :meeting_id ="meeting_id" :members_list = "members_list">
                 </memberPaymentForm>
             </div>
         </div>
@@ -118,6 +118,9 @@ export default {
             memberPaymentsForm : false, 
             otherPaymentsForm : false, 
 
+            Meeting_Status: "Incomplete",
+            status_class: "text-success",
+
             members_list: []
         }
     },
@@ -141,16 +144,23 @@ export default {
         },
 
         fetchMembers(meeting_id){
-            axios.get('/api/v1/meeting/member/' + this.meeting_id,  {headers: { 'Token': localStorage.getItem('token') }} ).then((response) => {
+            axios.get('/api/v1/meeting/member/' + meeting_id,  {headers: { 'Token': localStorage.getItem('token') }} ).then((response) => {
                 this.members_list = response.data
-        })
-    }, 
+            })
+        }, 
+        fetchMeetingStatus(meeting_id){
+            axios.get('/meeting_status/' + meeting_id,  {headers: { 'Token': localStorage.getItem('token') }} ).then((response) => {
+                this.Meeting_Status = response.data.meeting_status
+                this.status_class = response.data.status_class
+            })
+        }
     
 
 },
 mounted() {
         console.log(this.meeting_id)
         this.fetchMembers(this.meeting_id)
+        this.fetchMeetingStatus(this.meeting_id)
     }
 }
 </script>

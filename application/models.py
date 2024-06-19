@@ -1,7 +1,8 @@
 from application.database import db
 from flask_security import UserMixin, RoleMixin
 from sqlalchemy import event
-from sqlalchemy import Enum
+from sqlalchemy.orm.attributes import set_committed_value
+from sqlalchemy import Numeric
 
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -42,14 +43,13 @@ class SHG(db.Model):
     __tablename__ = 'shg'
     id = db.Column(db.Integer, primary_key=True)
     shg_name = db.Column(db.String(80), nullable=False)
-    project_name = db.Column(db.String(100), nullable=False)
-    village_name = db.Column(db.String(100), nullable=False)
-    panchayat_name = db.Column(db.String(100), nullable=False)
+    project_name = db.Column(db.String(50), nullable=False)
+    village_name = db.Column(db.String(50), nullable=False)
+    panchayat_name = db.Column(db.String(50), nullable=False)
     group_address = db.Column(db.Text, nullable=False)
     formation_date = db.Column(db.Date, nullable=False)
     total_no_of_members = db.Column(db.Integer, nullable=False)
     saving_day = db.Column(db.Integer, nullable=False)
-    place_of_meeting = db.Column(db.String(100), nullable=False)
     staff_name = db.Column(db.String(80), nullable=False)
     samuh_sakhi_name = db.Column(db.String(80), nullable=False)
     per_share_size_in_INR = db.Column(db.Integer, nullable=False)
@@ -74,28 +74,28 @@ class members(db.Model):
 
     member_id = db.Column(db.Integer, primary_key=True)
     shg_id = db.Column(db.Integer, nullable=False)
-    village = db.Column(db.String(255))
-    household_code = db.Column(db.String(255), nullable=False)
-    first_name = db.Column(db.String(255), nullable=False)
-    father_husband_name = db.Column(db.String(255), nullable=False)
-    last_name = db.Column(db.String(255), nullable=False)
+    village = db.Column(db.String(50))
+    household_code = db.Column(db.String(20), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    father_husband_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
     number_of_family_members = db.Column(db.Integer, nullable=False)
-    voter_id = db.Column(db.String(255))
-    adhar_id = db.Column(db.String(255))
-    pan_number = db.Column(db.String(255))
-    ration_card_number = db.Column(db.String(255))
-    education = db.Column(db.String(255), nullable=False)
-    category = db.Column(db.String(255))
-    caste = db.Column(db.String(255))
+    voter_id = db.Column(db.String(20))
+    adhar_id = db.Column(db.String(20))
+    pan_number = db.Column(db.String(20))
+    ration_card_number = db.Column(db.String(20))
+    education = db.Column(db.String(40), nullable=False)
+    category = db.Column(db.String(20))
+    caste = db.Column(db.String(20))
     number_of_family_members = db.Column(db.Integer, nullable=False)
-    mobile_number = db.Column(db.String(10), nullable=False, unique=True)
-    total_land_kattha = db.Column(db.Integer)
+    mobile_number = db.Column(db.Integer, nullable=False, unique=True)
+    total_land_kattha = db.Column(Numeric(precision=10, scale=2))
     total_irrigated_land_kattha = db.Column(db.Integer)
     total_no_of_goats = db.Column(db.Integer)
     total_no_of_cattle = db.Column(db.Integer)
     total_no_of_members_migrated = db.Column(db.Integer)
-    main_source_of_income = db.Column(db.String(255))
-    head_of_the_family_name = db.Column(db.String(255))
+    main_source_of_income = db.Column(db.String(50))
+    head_of_the_family_name = db.Column(db.String(50))
     scheme_1 = db.Column(db.Boolean)
     scheme_2 = db.Column(db.Boolean)
     
@@ -198,13 +198,14 @@ class loanPurposeList(db.Model):
 
 
 class memberLoanPayments(db.Model):
-    __tablename__ = 'memberPayments'
+    __tablename__ = 'memberLoanPayments'
     id = db.Column(db.Integer, primary_key=True)
     member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
     payment_date = db.Column(db.Date, nullable=False)
     payment_amount = db.Column(db.Integer, nullable=False)
     loan_purpose = db.Column(db.Integer, db.ForeignKey('loanPurposeList.id'), nullable=False)
+    __table_args__ = (db.UniqueConstraint('meeting_id', 'member_id'),)
 
 
 class memberSavingsPayments(db.Model):
@@ -213,29 +214,45 @@ class memberSavingsPayments(db.Model):
     member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
     payment_date = db.Column(db.Date, nullable=False)
+    reason = db.Column(db.String(50), nullable=False)
     payment_amount = db.Column(db.Integer, nullable=False)
+    __table_args__ = (db.UniqueConstraint('meeting_id', 'member_id'),)
 
 
-def reduce_savings(mapper, connection, target):
-    # Get the member ID and payment amount from the target (the new memberSavingsPayments entry)
-    member_id = target.member_id
-    payment_amount = target.payment_amount
+# def reduce_savings(session, flush_context, instances):
+#     for target in session.new:
+#         if isinstance(target, memberSavingsPayments):
+#             member_id = target.member_id
+#             payment_amount = target.payment_amount
 
-    # Query the members table to get the member
-    member = db.session.query(members).filter_by(member_id=member_id).first()
+#             member = session.query(members).filter_by(member_id=member_id).first()
 
-    if member:
-        # Reduce the total_savings by the payment amount
-        member.total_savings -= payment_amount
+#             if member:
+#                 new_total_savings  = member.total_savings - payment_amount
+#                 set_committed_value(member, 'total_savings', new_total_savings)
+#                 member.total_savings = new_total_savings
 
-        # Commit the changes to the database
-        db.session.commit()
+# # def reduce_savings(mapper, connection, target):
+# #     # Get the member ID and payment amount from the target (the new memberSavingsPayments entry)
+# #     member_id = target.member_id
+# #     payment_amount = target.payment_amount
 
-event.listen(memberSavingsPayments, 'after_insert', reduce_savings)
+# #     # Query the members table to get the member
+# #     member = db.session.query(members).filter_by(member_id=member_id).first()
+
+# #     if member:
+# #         # Reduce the total_savings by the payment amount
+# #         new_total_savings  = member.total_savings - payment_amount
+
+# #         set_committed_value(member, 'total_savings', new_total_savings)
+        
+# #         # Update the total_savings
+# #         member.total_savings = new_total_savings
+
+
+
+# event.listen(db.session, 'after_flush', reduce_savings)
   
-
-
-
 
 class bankEmiPayments(db.Model):
     __tablename__ = 'bankEmiPayments'
@@ -245,6 +262,7 @@ class bankEmiPayments(db.Model):
     payment_date = db.Column(db.Date, nullable=False)
     principal_amount = db.Column(db.Integer, nullable=False)
     interest_amount = db.Column(db.String(20), nullable=False)
+    __table_args__ = (db.UniqueConstraint('meeting_id', 'loan_account_id'),)
 
 
 class savingsAccountPayments(db.Model):
@@ -262,7 +280,7 @@ class otherServiceChargePayments(db.Model):
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)    
     payment_date = db.Column(db.Date, nullable=False)    
     payment_amount = db.Column(db.Integer, nullable=False)
-    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)
+    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
 
 
 class otherCashInHandPayments(db.Model):
