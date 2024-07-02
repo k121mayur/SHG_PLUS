@@ -23,12 +23,17 @@
                         <input type="text" id="panchyat_name" name="panchyat_name" class="form-control" v-model="formData.panchyat_name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="group_address" class="form-label">Group Address:</label>
+                        <label for="group_address" class="form-label">Meeting Place</label>
                         <textarea id="group_address" name="group_address" rows="4" cols="50" class="form-control" v-model="formData.group_address"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="formation_date" class="form-label">Formation Date:</label>
                         <input type="date" id="formation_date" name="formation_date" class="form-control" v-model="formData.formation_date" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="first_saving_date" class="form-label">First Saving Date:</label>
+                        <input type="date" id="first_saving_date" name="first_saving_date" class="form-control" v-model="formData.first_saving_date" required>
                     </div>
                     <div class="mb-3">
                         <label for="total_no._of_members" class="form-label">Total Number of Members:</label>
@@ -112,6 +117,7 @@ export default {
                 panchyat_name: '',
                 group_address: '',
                 formation_date: '',
+                first_saving_date: '',
                 total_no_of_members: '',
                 saving_day: '',
                 place_of_meeting: '',
@@ -142,10 +148,10 @@ export default {
     }, 
     computed: {
         shareOutDate() {
-            if (!this.formData.formation_date) return ''; // Return empty string if formation_date is not set
+            if (!this.formData.first_saving_date) return ''; // Return empty string if formation_date is not set
 
             // Convert formation_date to Date object
-            const formationDate = new Date(this.formData.formation_date);
+            const formationDate = new Date(this.formData.first_saving_date);
             // Calculate shareOutDate by adding 52 weeks to formation_date
             const shareOutDate = new Date(formationDate.getTime() + (52 * 7 * 24 * 60 * 60 * 1000)); // 52 weeks in milliseconds
 

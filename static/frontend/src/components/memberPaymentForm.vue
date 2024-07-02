@@ -28,7 +28,7 @@
 
             <div class="mb-3 col-md-6">
                 <label for="loanAmount" class="form-label">Loan Amount</label>
-                <input type="number" class="form-control short mx-3" id="loanAmount" v-model="receiptData.loan_amount" min="100" required>
+                <input type="number" class="form-control short mx-3" id="loanAmount" v-model="receiptData.loan_amount" min="500" required>
             </div>
         </div>
 

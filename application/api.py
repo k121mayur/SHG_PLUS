@@ -91,6 +91,7 @@ class shgApi(Resource):
         panchayat_name = data.get('panchyat_name')
         group_address = data.get('group_address')
         formation_date = datetime.strptime(data.get('formation_date'), "%Y-%m-%d").date()
+        first_saving_date = datetime.strptime(data.get('first_saving_date'), "%Y-%m-%d").date()
         total_no_of_members = data.get('total_no_of_members')
         saving_day = data.get('saving_day')
         staff_name = data.get('staff_name')
@@ -110,6 +111,7 @@ class shgApi(Resource):
             panchayat_name=panchayat_name,
             group_address=group_address,
             formation_date=formation_date,
+            first_saving_date=first_saving_date,
             total_no_of_members=total_no_of_members,
             saving_day=saving_day,
             staff_name=staff_name,

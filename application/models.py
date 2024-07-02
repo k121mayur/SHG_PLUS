@@ -48,6 +48,8 @@ class SHG(db.Model):
     panchayat_name = db.Column(db.String(50), nullable=False)
     group_address = db.Column(db.Text, nullable=False)
     formation_date = db.Column(db.Date, nullable=False)
+    first_saving_date = db.Column(db.Date, nullable=False)
+
     total_no_of_members = db.Column(db.Integer, nullable=False)
     saving_day = db.Column(db.Integer, nullable=False)
     staff_name = db.Column(db.String(80), nullable=False)
