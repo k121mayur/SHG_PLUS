@@ -36,7 +36,7 @@
 
             <div class="mb-3 col-md-6 " v-if="receiptData.transactionType == 1">
                 <label for="depositDate" class="form-label">Date of Deposit</label>
-                <input type="date" class="form-control  mx-3" id="depositDate" v-model="receiptData.depositDate">
+                <input type="date" :max="new Date().toISOString().split('T')[0]" class="form-control  mx-3" id="depositDate" v-model="receiptData.depositDate">
             </div>
 
             <div class="mb-3 col-md-6" v-if="receiptData.transactionType == 1">

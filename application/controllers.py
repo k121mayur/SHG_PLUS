@@ -47,19 +47,19 @@ def shgID(meeting_id):
 def meeting_status(meeting_id):
     #Case 1 : Attendece and Member Receipts are not matching
 
-    attendence = len(db.session.query(meetingAttendence).filter(meetingAttendence.meeting_id == meeting_id).all())
+    attendence = len(db.session.query(meetingAttendence).filter(meetingAttendence.meeting_id == meeting_id, meetingAttendence.attended == 1).all())
     print(attendence)
     member_receipts = [r.member_id for r in db.session.query(memberSavingsReceipts.member_id).filter(memberSavingsReceipts.meeting_id == meeting_id).all() ]
     loan_repayment_receipts = [r.member_id for r in db.session.query(memberLoanRepaymentReceipts.member_id).filter(memberLoanRepaymentReceipts.meeting_id == meeting_id).all() ]
     receipts = set(member_receipts + loan_repayment_receipts)
-    print(member_receipts, loan_repayment_receipts)
+    print(receipts,member_receipts, loan_repayment_receipts)
     if len(receipts) != attendence:
         return jsonify({"meeting_status" : "Member receipts entry pending", "status_class" : "text-danger"})
     
     #Case 2 : The Receipts total vs Payment Total is not matching
     
     # Member Receipts
-    savings_total =  db.session.query(func.sum(memberSavingsReceipts.receipt_amount)).filter(memberSavingsPayments.meeting_id == meeting_id).first()[0]
+    savings_total =  db.session.query(func.sum(memberSavingsReceipts.receipt_amount)).filter(memberSavingsReceipts.meeting_id == meeting_id).first()[0]
     savings_total = savings_total if savings_total else 0
     
     principal_total = db.session.query(func.sum(memberLoanRepaymentReceipts.principal_amount)).filter(memberLoanRepaymentReceipts.meeting_id == meeting_id).first()[0]

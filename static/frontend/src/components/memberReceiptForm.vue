@@ -28,7 +28,35 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-warning m-1" @click="list_member_recipts()">List</button>
         </form>
+    </div>
+    <div v-if="toggle_receipts_list " class="receipts_list" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: white;" >
+        
+    <h1> Receipts List </h1>
+    <table class="table table-hover table-responsive" style="overflow: auto;">
+        <thead>
+            <tr>
+                <th>Member Name</th>
+                <th>Savings</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Fine</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="receipt in receipts_list">
+                <td>{{ receipt.name }}</td>
+                <td>{{ receipt.savings[0]}}</td>
+                <td>{{ receipt.principal[0] }}</td>
+                <td>{{ receipt.interest[0] }}</td>
+                <td>{{ receipt.fine[0] }}</td>
+                <td><button class="btn btn-primary" @click="delte_receipt(receipt.savings[1], receipt.principal[1], receipt.interest[1], receipt.fine[1])">Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+    
     </div>
 </template>
 
@@ -74,26 +102,57 @@ export default {
             savings: 0,
             principal: 0,
             interest: 0,
-            fine: 0
-        }
+            fine: 0 
+        }, 
+        receipts_list: false,
+        toggle_receipts_list: false
     }
     },
     methods : {
-        submitForm() {  
+        submitForm() { 
+            if (this.receiptData.member_id == '') {
+                alert("Please select member")
+            }else if( this.receiptData.savings == 0 && this.receiptData.principal == 0 && this.receiptData.interest == 0 && this.receiptData.fine == 0 ){
+                alert("Please enter receipt amount")
+            } else{
             axios.post('/api/v1/memberReceipt', this.receiptData ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
                 if(response.status == 200){
                     this.receiptData.savings = 0
                     this.receiptData.principal = 0
                     this.receiptData.interest = 0 
                     this.receiptData.fine = 0
-                    alert("Receipt added Successfully!")
+                    alert(response.data.message)
                 }else{
                     alert("Problem")
                 }
             }).catch((error) => {
                 alert(error.data)
             })
+        }
+    },
+    list_member_recipts() {
+        axios.get('/api/v1/memberReceipts/' + this.meeting_id ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
+            if (response.data.length == 0) {
+                alert("No receipts found")
+            }else{
+                this.toggle_receipts_list = true;
+                this.receipts_list = response.data
+            }
+            
+    })
+    }, 
+
+    delte_receipt(savings, principal, interest, fine) {
+        axios.delete('/api/v1/memberReceipt',  { headers:{ 'Token': localStorage.getItem('token') },
+         data: {savings: savings, principal: principal, interest: interest, fine: fine} } ).then((response) => {
+            if(response.status == 200){
+                alert(response.data.message)
+                this.list_member_recipts()
+            }else{
+                alert("Problem")
+            }
+        })  
     }
-    }
+}
 }
 </script>

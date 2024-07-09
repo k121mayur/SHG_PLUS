@@ -257,7 +257,6 @@ class shgBankAccountApi(Resource):
           })
       return jsonify(account_list)
          
-
 class meetingApi(Resource):
    def post(self):
       try:
@@ -317,13 +316,18 @@ class memberReceiptApi(Resource):
 
       for type, amt in receipts.items():
         if int(amt) > 0 and type == "savings":
-           new_saving_receipt = memberSavingsReceipts(
-            meeting_id = meeting_id,
-            member_id = member_id,
-            receipt_date = receipt_date,
-            receipt_amount = amt
-           )
-           db.session.add(new_saving_receipt)
+           try:
+              print("came here")
+              new_saving_receipt = memberSavingsReceipts(
+              meeting_id = meeting_id,
+              member_id = member_id,
+              receipt_date = receipt_date,
+              receipt_amount = amt
+               )
+              db.session.add(new_saving_receipt)
+           except:
+              return jsonify({"message": "For this member receipt already exist. Edit or Delete earlier receipt."})
+           
         
         elif int(amt) > 0 and type == "principal": #principal
            print("principal")
@@ -345,10 +349,52 @@ class memberReceiptApi(Resource):
            db.session.add(new_fine_receipt) 
         else:
            continue   
-      db.session.commit()
-      
+      try:  
+         db.session.commit()
+      except:
+         return jsonify({"message": "For this member receipt already exist. Edit or Delete earlier receipt."})
       return jsonify({"message": "Receipt added successfully."})
+   
+   def get(self, meeting_id):
+      #Wrtite code here to get receipt details
 
+
+      members_attendece = db.session.query(meetingAttendence).filter(meetingAttendence.meeting_id == meeting_id, meetingAttendence.attended == 1).all()
+      data = []
+      for member in members_attendece:
+          
+          savings_receipt = db.session.query(memberSavingsReceipts).filter(memberSavingsReceipts.meeting_id == meeting_id, memberSavingsReceipts.member_id == member.member_id).first()
+          
+          principal_receipt = db.session.query(memberLoanRepaymentReceipts).filter(memberLoanRepaymentReceipts.meeting_id == meeting_id, memberLoanRepaymentReceipts.member_id == member.member_id).first()
+          
+          
+          fine_receipts = db.session.query(memberFineReceipts).filter(memberFineReceipts.meeting_id == meeting_id, memberFineReceipts.member_id == member.member_id).first()
+          
+          member_data = db.session.query(members).filter(members.member_id == member.member_id).first()
+          
+          data.append({'id': member.member_id, 'name': member_data.first_name + ' ' + member_data.father_husband_name + ' ' + member_data.last_name, 
+                       'savings': [savings_receipt.receipt_amount, savings_receipt.id] if savings_receipt else [0, 0], 
+                       'principal': [principal_receipt.principal_amount, principal_receipt.id] if principal_receipt else [0, 0],
+                       'interest': [principal_receipt.interest_amount, principal_receipt.id] if principal_receipt else [0, 0],
+                       'fine':[fine_receipts.receipt_amount, fine_receipts.id] if fine_receipts else [0, 0]})
+      print(data)
+      return jsonify(data)
+
+   def delete(self):
+      savings_id = request.json['savings']
+      principal_id = request.json['principal']
+      interest_id = request.json['interest']
+      fine_id = request.json['fine']
+      if savings_id > 0:
+         db.session.query(memberSavingsReceipts).filter(memberSavingsReceipts.id == savings_id).delete()
+      if principal_id > 0:
+         db.session.query(memberLoanRepaymentReceipts).filter(memberLoanRepaymentReceipts.id == principal_id).delete()
+      if interest_id > 0:
+         db.session.query(memberLoanRepaymentReceipts).filter(memberLoanRepaymentReceipts.id == interest_id).delete()
+      if fine_id > 0:
+         db.session.query(memberFineReceipts).filter(memberFineReceipts.id == fine_id).delete()
+      db.session.commit()
+      return jsonify({"message": "Receipt deleted successfully."})
 
 class otherLoanReceiptsApi(Resource):
    def post(self):
@@ -432,6 +478,7 @@ class memberSavingsPaymentsApi(Resource):
       return jsonify({"message": "Receipt added successfully."})
 
 
+ 
 class bankEmiPaymentsApi(Resource):
    def post(self):
       data = request.json

@@ -22,7 +22,7 @@
         <div class="form-group d-flex flex-row align-items-center justify-content-center">
             
             <label for="date" >Date of Meeting</label>
-            <input type="date" id="date" class="form-control mx-3" name="date" v-model="meeting_date" required/>
+            <input type="date" :max="new Date().toISOString().split('T')[0]" id="date" class="form-control mx-3" name="date" v-model="meeting_date" required/>
         </div>
 
          <!-- List of meetings -->

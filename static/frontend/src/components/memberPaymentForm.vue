@@ -17,16 +17,42 @@
             </select>
         </div>
 
-        <div class="d-flex flex-row flex-wrap" v-if="receiptData.paymentType == 0" >
+        <div class="d-flex flex-row flex-wrap justify-content-start" v-if="receiptData.paymentType == 0" >
             
-            <div class="mb-3 col-md-6">
+            <div class="mb-3 col-md-12 d-flex justify-content-start">
                 <label for="loanPurpose" class="form-label">Loan Purpose</label>
                 <select class="form-select mx-3" id="loanPurpose" v-model="receiptData.loan_purpose" style="width: max-content;">
-                    <option v-for="purpose in this.loanPurposeList" :value="purpose.value">{{purpose.name}}</option>
+                    <option value="01-A">Dhan, Wheat, and Other Agriculture Seeds</option>
+                        <option value="01-B">Vegetable Cultivation</option>
+                        <option value="01-C">Livestock</option>
+                        <option value="01-D">Motor, Engine, and Others</option>
+                        <option value="01-E">Purchasing Land</option>
+                        <option value="01-F">Taking Land on Lease</option>
+                        <option value="01-G">Deepening the Well, Borewell, etc.</option>
+                        <option value="01-H">Other Production Work</option>
+                        <option value="02-A">Children's Education</option>
+                        <option value="02-B">Health</option>
+                        <option value="03-A">Health of Livestock</option>
+                        <option value="03-B">Goat Rearing</option>
+                        <option value="03-C">Business</option>
+                        <option value="03-D">Poultry</option>
+                        <option value="04-A">Worshipping</option>
+                        <option value="04-B">Vehicle</option>
+                        <option value="04-C">Housing</option>
+                        <option value="04-D">T.V., Mixture Machine, and Others</option>
+                        <option value="04-E">Repaying Old Outside Loan</option>
+                        <option value="04-F">Festival and Enjoyment</option>
+                        <option value="04-G">Marriage, Funeral, etc.</option>
+                        <option value="04-H">Shopping</option>
+                        <option value="04-I">Ration</option>
+                        <option value="04-J">Traveling</option>
+                        <option value="04-K">Case, Police, and Others</option>
+                        <option value="04-L">Purchasing Property</option>
+                        <option value="04-M">Other</option>
                 </select>
             </div>
 
-            <div class="mb-3 col-md-6">
+            <div class="mb-3 col-md-12 d-flex justify-content-start">
                 <label for="loanAmount" class="form-label">Loan Amount</label>
                 <input type="number" class="form-control short mx-3" id="loanAmount" v-model="receiptData.loan_amount" min="500" required>
             </div>
@@ -88,7 +114,6 @@ export default {
     },
     data() {
     return {
-        loanPurposeList : [],
         receiptData: {
             paymentType: 0,
             meeting_id: this.meeting_id,
@@ -98,8 +123,39 @@ export default {
             savingsReturnReason : '',
             loan_purpose : ''
 
-        }
+        },
+        loanPurposeList : [
+        { value: '01-A', name: 'Dhan, Wheat, and Other Agriculture Seeds' },
+        { value: '01-B', name: 'Vegetable Cultivation' },
+        { value: '01-C', name: 'Livestock' },
+        { value: '01-D', name: 'Motor, Engine, and Others' },
+        { value: '01-E', name: 'Purchasing Land' },
+        { value: '01-F', name: 'Taking Land on Lease' },
+        { value: '01-G', name: 'Deepening the Well, Borewell, etc.' },
+        { value: '01-H', name: 'Other Production Work' },
+        { value: '02-A', name: 'Children\'s Education' },
+        { value: '02-B', name: 'Health' },
+        { value: '03-A', name: 'Health of Livestock' },
+        { value: '03-B', name: 'Goat Rearing' },
+        { value: '03-C', name: 'Business' },
+        { value: '03-D', name: 'Poultry' },
+        { value: '04-A', name: 'Worshipping' },
+        { value: '04-B', name: 'Vehicle' },
+        { value: '04-C', name: 'Housing' },
+        { value: '04-D', name: 'T.V., Mixture Machine, and Others' },
+        { value: '04-E', name: 'Repaying Old Outside Loan' },
+        { value: '04-F', name: 'Festival and Enjoyment' },
+        { value: '04-G', name: 'Marriage, Funeral, etc.' },
+        { value: '04-H', name: 'Shopping' },
+        { value: '04-I', name: 'Ration' },
+        { value: '04-J', name: 'Traveling' },
+        { value: '04-K', name: 'Case, Police, and Others' },
+        { value: '04-L', name: 'Purchasing Property' },
+        { value: '04-M', name: 'Other' }
+      ]
+        
     }
+
     },
     methods : {
         submitForm() {  

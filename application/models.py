@@ -144,6 +144,7 @@ class memberSavingsReceipts(db.Model):
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
     receipt_date = db.Column(db.Date, nullable=False)
     receipt_amount = db.Column(db.Integer, nullable=False)
+    __table_args__ = (db.UniqueConstraint('member_id', 'meeting_id'),)
 
      # Add here event listener to add savings to the member's total savings when a receipt is made
 

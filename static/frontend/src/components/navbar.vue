@@ -12,10 +12,10 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link text-white" href="#">Dashboard</a>
+            <RouterLink class="nav-link text-white" to ="/Dashboard">Dashboard</RouterLink>
         </li>
         <li class="nav-item active">
-            <a class="nav-link text-white" href="#">Logout</a>
+            <a class="nav-link text-white" @click="logout">Logout</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#"></a>
@@ -38,11 +38,24 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 
 export default {
   name: 'navbar',
   data () {
     return {
+    }
+  }, 
+
+  methods: {
+    logout() {
+        axios.get('/logout')
+        .then(response => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role')
+            window.location.href = '/'
+        })
     }
   }
 

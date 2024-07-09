@@ -28,12 +28,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="formation_date" class="form-label">Formation Date:</label>
-                        <input type="date" id="formation_date" name="formation_date" class="form-control" v-model="formData.formation_date" required>
+                        <input type="date" :max="today" id="formation_date" name="formation_date" class="form-control" v-model="formData.formation_date" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="first_saving_date" class="form-label">First Saving Date:</label>
-                        <input type="date" id="first_saving_date" name="first_saving_date" class="form-control" v-model="formData.first_saving_date" required>
+                        <input type="date" :max="today" id="first_saving_date" name="first_saving_date" class="form-control" v-model="formData.first_saving_date" required>
                     </div>
                     <div class="mb-3">
                         <label for="total_no._of_members" class="form-label">Total Number of Members:</label>
@@ -109,6 +109,7 @@ export default {
     name: 'newGroupEntry', 
     data (){
         return {
+            today: new Date().toISOString().split('T')[0],
             formData: {
                 shareOutDate : "",
                 name_of_shg: '',

@@ -67,7 +67,7 @@ from application.api import *
 api.add_resource(shgApi, "/api/v1/shg", "/api/v1/shg/<int:shg_id>", "/api/v1/shgs/byMonth/<int:month>")
 api.add_resource(memberApi, "/api/v1/member", "/api/v1/member/<int:shg_id>",  "/api/v1/meeting/member/<int:meeting_id>")
 api.add_resource(meetingApi, "/api/v1/meeting", "/api/v1/meeting/<int:shg_id>")
-api.add_resource(memberReceiptApi, "/api/v1/memberReceipt")
+api.add_resource(memberReceiptApi, "/api/v1/memberReceipt", "/api/v1/memberReceipts/<int:meeting_id>")
 api.add_resource(shgBankAccountApi, "/api/v1/ShgAccount/<int:shg_id>", "/api/v1/ShgAccount/<int:shg_id>/<int:account_type>")
 api.add_resource(otherLoanReceiptsApi, "/api/v1/otherLoanReceipts")
 api.add_resource(otherSavingsReceiptsApi, "/api/v1/otherSavingsReceipts")

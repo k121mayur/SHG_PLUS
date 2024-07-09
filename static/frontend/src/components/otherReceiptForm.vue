@@ -59,7 +59,7 @@
 
                 <div class="mb-3 col-md-12 " v-if="receiptData.transactionType == 1">
                     <label for="interestDate" class="form-label">Date of Withdrawal</label>
-                    <input type="date" class="form-control short mx-3" id="interestDate"
+                    <input type="date" :max="new Date().toISOString().split('T')[0]" class="form-control short mx-3" id="interestDate"
                         v-model="receiptData.withdrawalDate">
                 </div>
 
@@ -71,7 +71,44 @@
             </div>
             <div class="d-flex flex-row justify-content-center align-items-center">
                 <button type="submit" class="btn btn-primary" v-if="receiptData.transactionType">Submit</button>
-                <div class="btn btn-warning m-3" v-if="receiptData.loanAccountId === '0'"> Add Loan Account </div>
+                <div class="btn btn-warning m-3" v-if="receiptData.loanAccountId === '0'" @click="toggle_loan_account_form()"> Add Loan Account </div>
+            </div>
+            <div>
+                <div v-if="show_loan_account_form" style="position: absolute;    top: 0%;    left: 0%;    width: 100%;    height: 110%;    background-color: white;    z-index: 1">
+                    <form @submit.prevent="addLoanAccount">
+                        <h2 class="text-center m-3">Add Loan Account</h2>
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
+                            <label for="bankName" class="form-label">Bank Name</label>
+                            <input type="text" class="form-control short mx-3" id="bankName"   v-model="new_loan_account.bank_name">
+                        </div>
+                        
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
+                            <label for="branchName" class="form-label">Branch Name</label>
+                            <input type="text" class="form-control short mx-3" id="branchName"   v-model="new_loan_account.branch_name">
+                        </div>
+                        
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
+                            <label for="accountName" class="form-label">Account Name</label>
+                            <input type="text" class="form-control short mx-3" id="accountName"   v-model="new_loan_account.account_name">
+                        </div>
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
+                            <label for="accountNumber" class="form-label">Account Number</label>
+                            <input type="text" class="form-control short mx-3" id="accountNumber"   v-model="new_loan_account.account_number">
+                        </div>
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
+                            <label for="accountNumber" class="form-label">Confirm Account Number</label>
+                            <input type="text" class="form-control short mx-3" id="accountNumber"   v-model="new_loan_account.confirm_account_number">
+                        </div>
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
+                            <label for="ifscCode" class="form-label">IFSC Code</label>
+                            <input type="text" class="form-control short mx-3" id="ifscCode"   v-model="new_loan_account.ifsc_code">
+                        </div>
+                        
+                        <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; ">    
+                            <button type="button" class="btn btn-primary" @click="addLoanAccount()" v-if="new_loan_account.account_number === new_loan_account.confirm_account_number">Add Account</button>
+                        </div>
+                    </form>
+                </div>   
             </div>
         </form>
     </div>
@@ -113,6 +150,14 @@ export default {
         return {
             shg_id: null,
             Account_list: [],
+            show_loan_account_form: false,
+            new_loan_account: {
+                account_number: '',
+                account_name: '',
+                confirm_account_number: '',
+                ifsc_code: '',
+                branch_name: ''
+            },
             receiptData: {
                 meeting_id: this.meeting_id,
                 transactionType: '',
@@ -136,6 +181,10 @@ export default {
             console.log("Other receipt function is called")
             console.log(this.receiptData.transactionType)
             if (this.receiptData.transactionType === '0') {
+                if (this.receiptData.loanAccountId === '0') {
+                    alert("Please select Loan Account")
+                    return
+                }
                 axios.post('/api/v1/otherLoanReceipts', this.receiptData, { headers: { 'Token': localStorage.getItem('token') } }).then((response) => {
                     if (response.status == 200) {
                         this.receiptData.transactionType = ''
@@ -179,6 +228,10 @@ export default {
                         console.log(response.data.shg_id)
                         this.shg_id = response.data.shg_id
                     })
+                }, 
+
+                toggle_loan_account_form() {
+                    this.show_loan_account_form = !this.show_loan_account_form
                 }
             },
 
