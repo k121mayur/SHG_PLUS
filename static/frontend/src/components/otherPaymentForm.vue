@@ -13,7 +13,7 @@
             </select>
 
             <label for="loanAccount" class="form-label m-3" v-if="receiptData.transactionType === '0'">Select Loan Account</label>
-            <select class="form-select m-3" id="loanAccount" v-model="receiptData.loanAccount" style="width: max-content;" v-if="receiptData.transactionType === '0'">
+            <select class="form-select m-3" id="loanAccount" v-model="receiptData.loanAccountId" style="width: max-content;" v-if="receiptData.transactionType === '0'">
                 <option v-for="account in Account_list" :value="account.id">{{account.bank_name}}-{{ account.account_number }}</option>
             </select>
 
@@ -120,7 +120,7 @@ export default {
         receiptData: {
             meeting_id: this.meeting_id,
             transactionType: '',
-            loanAccount: '',   
+            loanAccountId: '',   
             principalAmount: 0,
             interestAmount: 0,
 

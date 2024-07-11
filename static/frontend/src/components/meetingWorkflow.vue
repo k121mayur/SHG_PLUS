@@ -45,7 +45,7 @@
         </div>
 
         <div v-if ="memberReceiptsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleMemberReceiptsForm()" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleMemberReceiptsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
                     height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
@@ -57,7 +57,7 @@
         </div>
 
         <div v-if ="otherReceiptForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleOtherReceiptsForm()" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleOtherReceiptsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
                     height: 70%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
@@ -68,7 +68,7 @@
         </div>
 
         <div v-if ="memberPaymentsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleMemberPaymentsForm()" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleMemberPaymentsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
                     height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
@@ -80,7 +80,7 @@
         </div>
 
         <div v-if ="otherPaymentsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleOtherPaymentsForm()" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleOtherPaymentsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
                     height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">

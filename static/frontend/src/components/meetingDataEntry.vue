@@ -1,6 +1,6 @@
 <template>
     <div>
-    <h1> Data Entry</h1>
+    <h1 class="text-center bg-light p-3 text-warning rounded-3"> Data Entry</h1>
 
         <form @submit.prevent="addMeeting">
         <div class="d-flex flex-row align-items-center justify-content-center">
@@ -25,30 +25,33 @@
             <input type="date" :max="new Date().toISOString().split('T')[0]" id="date" class="form-control mx-3" name="date" v-model="meeting_date" required/>
         </div>
 
+        <div class="mt-3 mx-3 d-flex flex-row col-md-12">
          <!-- List of meetings -->
-         <div id="meetings_list" class="m-3" v-if="!meetings_list.length == 0" >
-            <ul class="list-group mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
-                <li class="list-group-item" style="background-color: antiquewhite;">List of Meetings</li>
-                <li  class="list-group-item" v-for="meet in meetings_list">{{meet.name}} <RouterLink class="btn btn-primary mx-3" :to="`/meetingWorkflow/${meet.value}`" >Edit</RouterLink></li>
-            </ul>
-        </div>
+            <div id="meetings_list" class=" col-md-4" v-if="!meetings_list.length == 0" >
+                <ul class="list-group mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
+                    <li class="list-group-item" style="background-color: antiquewhite;">List of Meetings</li>
+                    <li  class="list-group-item" v-for="meet in meetings_list">{{meet.name}} <RouterLink class="btn btn-primary mx-3" :to="`/meetingWorkflow/${meet.value}`" >Edit</RouterLink></li>
+                </ul>
+            </div>
 
-        <!-- list of members -->
-        <div class="m-3"  style="border-radius: 20px; overflow: auto" v-if ="!members_list.length == 0" > 
-            <ul class="list-group d-flex flex-column align-items-left justify-content-start mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
-                <li class="list-group-item" style="background-color: antiquewhite; text-align: center; padding-top: 3px; color: darkblue">Member Attendence</li>
-                <li v-for="member in members_list" class="list-group-item d-flex flex-row justify-content-start align-items-center"  style="padding-left: 3rem;">
-                    <input type="checkbox" id ="member"  class="m-3" :name="member.name" :value="member.value" v-model="member.present"/>
-                    <label>{{member.name}}</label>
-                </li>
-            </ul>
-        
-        </div>
+            <!-- list of members -->
+            <div class="col-md-7 "  style="border-radius: 20px; overflow: auto" v-if ="!members_list.length == 0" > 
+                <ul class="list-group d-flex flex-column align-items-left justify-content-start mx-3" style="max-height: 30vh; border-radius: 20px; border : saddlebrown solid 1px; overflow: auto">
+                    <li class="list-group-item" style="background-color: antiquewhite; text-align: center; padding-top: 3px; color: darkblue">Member Attendence</li>
+                    <li v-for="member in members_list" class="list-group-item d-flex flex-row justify-content-start align-items-center"  style="padding-left: 3rem;">
+                        <input type="checkbox" id ="member"  class="m-3" :name="member.name" :value="member.value" v-model="member.present"/>
+                        <label>{{member.name}}</label>
+                    </li>
+                    
+                </ul>
+            
+            </div>
+    </div>
 
         <!-- Create meeting Button -->
-            <div> 
-                <button class="btn btn-primary my-3 mx-3" type="submit">Add Meeting</button>
-            </div>
+        <div> 
+              <button class="btn btn-primary my-3 mx-3" type="submit">Add Meeting</button>
+        </div>
         </form>
     </div>
 

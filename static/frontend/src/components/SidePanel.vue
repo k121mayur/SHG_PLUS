@@ -4,7 +4,7 @@
              Actions
         </div>
         <div class="element"> 
-            <RouterLink to="/">Home</RouterLink>
+            <RouterLink to="/dashboard">Home</RouterLink>
             <!-- <a href="">Group Data Entry</a> -->
         </div>
         <div class="element"> 

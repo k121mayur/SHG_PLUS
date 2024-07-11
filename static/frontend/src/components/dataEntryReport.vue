@@ -1,6 +1,6 @@
 <template>
 <div>
-    <h1> Data Entry Report</h1>
+    <h1 class="text-center bg-success p-3 text-light rounded-3"> Data Entry Report</h1>
     
     <div class="d-flex flex-row align-items-center justify-content-end">
         <label class="form-label m-3 text-primary"><strong>Select Month</strong></label>

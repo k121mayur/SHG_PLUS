@@ -236,7 +236,31 @@ class memberApi(Resource):
 
 class shgBankAccountApi(Resource):
    def post(self):
-      pass
+   #    __tablename__ = 'shgBankAccount'
+   #  id = db.Column(db.Integer, primary_key=True)
+   #  account_type = db.Column(db.String(10), nullable=False)
+   #  bank_name = db.Column(db.String(100), nullable=False)
+   #  branch = db.Column(db.String(100), nullable=False)
+   #  account_name = db.Column(db.String(100), nullable=False)
+   #  account_number = db.Column(db.String(50), nullable=False)
+   #  IFSC_code = db.Column(db.String(20), nullable=False)
+   #  shg_id = db.Column(db.Integer, db.ForeignKey('shg.id'), nullable=False)
+   #  balance = db.Column(db.Integer, nullable=False, default=0)
+
+      data = request.json
+      account = shgBankAccount(
+         account_type=data['account_type'] if data['account_type'] else "loan",
+         bank_name=data['bank_name'],
+         branch=data['branch_name'],
+         account_name=db.session.query(SHG.shg_name).filter(SHG.id == data['shg_id']).first()[0],
+         account_number=data['account_number'],
+         IFSC_code=data['ifsc_code'],
+         shg_id=data['shg_id'],
+         balance=0,
+      )
+      db.session.add(account)
+      db.session.commit()
+      return jsonify({"status": True})
 
    def get(self, shg_id, account_type):
       if account_type == 0:
@@ -419,6 +443,20 @@ class otherLoanReceiptsApi(Resource):
       db.session.add(new_receipt)
       db.session.commit()
       return jsonify({"message": "Loan Receipt added successfully."})
+   
+   def get(self, meeting_id):
+      #Wrtite code here to get receipt details by meeting id
+      other_loan_receipts = db.session.query(otherLoanReceipts).filter(otherLoanReceipts.meeting_id == meeting_id).all()
+      data = []
+      for receipt in other_loan_receipts:
+         data.append({"id": receipt.id, 'bank': db.session.query(shgBankAccount.bank_name).filter(shgBankAccount.id == receipt.loan_account_id).first()[0], 'loanType': receipt.loan_type, 'loanAmount': receipt.loan_amount, 'tenure': receipt.loan_tenure, 'interestRate': receipt.loan_interest_rate})
+      return jsonify(data)
+
+   def delete(self):
+      id = request.json['id']
+      db.session.query(otherLoanReceipts).filter(otherLoanReceipts.id == id).delete()
+      db.session.commit()
+      return jsonify({"message": "Receipt deleted successfully."})
 
 
 class otherSavingsReceiptsApi(Resource):
@@ -440,7 +478,20 @@ class otherSavingsReceiptsApi(Resource):
       db.session.commit()
       return jsonify({"message": "Bank Withdrawal Receipt added successfully."})
 
+   def get(self, meeting_id):
+      #Wrtite code here to get receipt details by meeting id
+      other_savings_receipts = db.session.query(otherSavingsReceipts).filter(otherSavingsReceipts.meeting_id == meeting_id).all()
+      data = []
+      for receipt in other_savings_receipts:
+         data.append({"id": receipt.id, 'bank': db.session.query(shgBankAccount.bank_name).filter(shgBankAccount.id == receipt.savings_account_id).first()[0], 'withdrawalAmount': receipt.withdrawal_amount, 'withdrawalDate': receipt.withdrawal_date.strftime('%d-%b-%Y')})
+      return jsonify(data)
 
+   def delete(self):
+      id = request.json['id']
+      db.session.query(otherSavingsReceipts).filter(otherSavingsReceipts.id == id).delete()
+      db.session.commit()
+      return jsonify({"message": "Receipt deleted successfully."})
+   
 class memberLoanPaymentsApi(Resource):
    def post(self):
       data = request.json
@@ -483,16 +534,14 @@ class bankEmiPaymentsApi(Resource):
    def post(self):
       data = request.json
       meeting_id = data['meeting_id']
-      member_id = data['member_id']
       receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
       
       new_receipt = bankEmiPayments(   
          meeting_id = meeting_id,
-         member_id = member_id,
          loan_account_id = data['loanAccountId'],
          payment_date = receipt_date,
-         payment_amount = data['emi_amount'],
-         reason = data['emi_reason']
+         principal_amount = data['principalAmount'],
+         interest_amount = data['interestAmount'],
       )
 
       db.session.add(new_receipt)
