@@ -508,6 +508,20 @@ class memberLoanPaymentsApi(Resource):
       )
       db.session.add(new_receipt)
       db.session.commit()
+   def get(self, meeting_id):
+      member_loan_payments = db.session.query(memberLoanPayments).filter(memberLoanPayments.meeting_id == meeting_id).all()
+      data = []
+      for receipt in member_loan_payments:
+         data.append({"id": receipt.id, 
+                      'name': db.session.query(members.first_name).filter(members.member_id == receipt.member_id).first()[0]+ " " + db.session.query(members.last_name).filter(members.member_id == receipt.member_id).first()[0] , 'payment_type': "Loan", 'payment_amount': receipt.payment_amount,})
+      return jsonify(data)
+
+   def delete(self):
+      id = request.json['id']
+      db.session.query(memberLoanPayments).filter(memberLoanPayments.id == id).delete()
+      db.session.commit()
+      return jsonify({"message": "Receipt deleted successfully."})
+
 
 class memberSavingsPaymentsApi(Resource):
    def post(self):
@@ -528,7 +542,20 @@ class memberSavingsPaymentsApi(Resource):
       db.session.commit()
       return jsonify({"message": "Receipt added successfully."})
 
+   def get(self, meeting_id):
+      member_savings_payments = db.session.query(memberSavingsPayments).filter(memberSavingsPayments.meeting_id == meeting_id).all()
+      data = []
+      for receipt in member_savings_payments:
+         data.append({"id": receipt.id, "name": db.session.query(members.first_name).filter(members.member_id == receipt.member_id).first()[0] + " " +db.session.query(members.last_name).filter(members.member_id == receipt.member_id).first()[0], 
+                      "payment_type": "Savings", "payment_amount": receipt.payment_amount})
 
+      return jsonify(data)
+   
+   def delete(self):
+      id = request.json['id']
+      db.session.query(memberSavingsPayments).filter(memberSavingsPayments.id == id).delete()
+      db.session.commit()
+      return jsonify({"message": "Receipt deleted successfully."})
  
 class bankEmiPaymentsApi(Resource):
    def post(self):

@@ -75,9 +75,30 @@
                 <input type="number" class="form-control short mx-3" id="cash_in_hand_amount" v-model="receiptData.cash_in_hand_amount">
             </div>
         </div>
-
-        <button type="submit" class="btn btn-primary" v-if="receiptData.transactionType">Submit</button>
+            <button type="submit" class="btn btn-primary" v-if="receiptData.transactionType">Submit</button>
+            <button type="button" class="btn btn-warning m-1" v-if="receiptData.transactionType" @click="list_other_payments(receiptData.transactionType)">List</button>
         </form>
+        <div v-if="toggle_payments_list">
+            <h2>Other Payments</h2>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Payment Type</th>
+                        <th>Payment Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(payment, index) in payments_list">
+                        <td>{{ index+1 }}</td>
+                        <td>{{ payment.payment_type }}</td>
+                        <td>{{ payment.payment_amount }}</td>
+                        <td><button class="btn btn-primary" @click="delete_payment(payment.id)">Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -117,6 +138,7 @@ export default {
     return {
         shg_id: null,
         Account_list: [],
+        toggle_payments_list: false,
         receiptData: {
             meeting_id: this.meeting_id,
             transactionType: '',

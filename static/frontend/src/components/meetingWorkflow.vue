@@ -45,19 +45,19 @@
         </div>
 
         <div v-if ="memberReceiptsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleMemberReceiptsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleMemberReceiptsForm(); fetchMeetingStatus(meeting_id)" class="btn btn-danger" style="margin-left: 60%;">Close</a>
             <div   
-            style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
-                    height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
+            style="position: absolute; top: 10%; left: 20%; background-color: white; width: 60%; 
+                    height: 70%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
                     
-                <h1 style="border-bottom: solid 1px black; padding: 1%;">Member Receipts </h1> 
+                <h1 style="border-bottom: solid 1px black; padding: 1%;">Member Receipts</h1> 
                 <memberReceiptForm :meeting_id = "meeting_id" :members_list = "members_list">
                 </memberReceiptForm>
             </div>
         </div>
 
         <div v-if ="otherReceiptForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleOtherReceiptsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleOtherReceiptsForm(); fetchMeetingStatus(meeting_id)" class="btn btn-danger" style="margin-left: 60%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
                     height: 70%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
@@ -68,10 +68,10 @@
         </div>
 
         <div v-if ="memberPaymentsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleMemberPaymentsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleMemberPaymentsForm(); fetchMeetingStatus(meeting_id)" class="btn btn-danger" style="margin-left: 60%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
-                    height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
+                    height: 70%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
                     
                 <h1 style="border-bottom: solid 1px black; padding: 1%;">Member Payments </h1> 
                 <memberPaymentForm :meeting_id ="meeting_id" :members_list = "members_list">
@@ -80,10 +80,10 @@
         </div>
 
         <div v-if ="otherPaymentsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">
-            <a @click="toggleOtherPaymentsForm(); fetchMeetingStatus(meeting_id)" class="close" style="margin-left: 60%; margin-top: 20%;">Close</a>
+            <a @click="toggleOtherPaymentsForm(); fetchMeetingStatus(meeting_id)" class="btn btn-danger" style="margin-left: 60%;">Close</a>
             <div   
             style="position: absolute; top: 12%; left: 20%; background-color: white; width: 60%; 
-                    height: 60%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
+                    height: 70%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
                     
                 <h1 style="border-bottom: solid 1px black; padding: 1%;">Other Payments </h1> 
                 <otherPaymentForm :meeting_id = "meeting_id" :members_list = "members_list">
@@ -94,8 +94,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 
+import axios from 'axios'
 import memberReceiptForm from '@/components/memberReceiptForm.vue'
 import otherReceiptForm from '@/components/otherReceiptForm.vue'
 import memberPaymentForm from '@/components/memberPaymentForm.vue'
@@ -105,7 +105,7 @@ import otherPaymentForm from '@/components/otherPaymentForm.vue'
 export default {
     name: 'meetingWorkflow',
     components :{
-        memberReceiptForm, 
+        memberReceiptForm,
         otherReceiptForm,
         memberPaymentForm,
         otherPaymentForm

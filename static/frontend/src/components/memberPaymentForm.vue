@@ -22,7 +22,7 @@
             <div class="mb-3 col-md-12 d-flex justify-content-start">
                 <label for="loanPurpose" class="form-label">Loan Purpose</label>
                 <select class="form-select mx-3" id="loanPurpose" v-model="receiptData.loan_purpose" style="width: max-content;">
-                    <option value="01-A">Dhan, Wheat, and Other Agriculture Seeds</option>
+                        <option value="01-A">Dhan, Wheat, and Other Agriculture Seeds</option>
                         <option value="01-B">Vegetable Cultivation</option>
                         <option value="01-C">Livestock</option>
                         <option value="01-D">Motor, Engine, and Others</option>
@@ -75,8 +75,39 @@
                     <input type="number" class="form-control short mx-3" id="savings" v-model="receiptData.savings_return_amount">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button> 
+            <button type="button" class="btn btn-warning m-1" @click="list_member_payments(receiptData.paymentType)">List</button>
         </form>
+
+        <div v-if="toggle_payments_list && payments_list.length > 0" style="position: absolute; top: 0; left: 0; width: 100%; height: 110%; background-color: white;">
+            <div class="d-flex flex-row flex-wrap justify-content-end">
+                <button type="button" class="btn btn-danger justify-content-end" @click="toggle_payments_list = false">Close</button>
+            </div>
+                <div>
+                    <h1>Payments List</h1>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Member Name</th>
+                                <th>Payment Type</th>
+                                <th>Payment Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(payment, index) in payments_list">
+                                <td>{{ index+1 }}</td>
+                                <td>{{ payment.name }}</td>
+                                <td>{{ payment.payment_type }}</td>
+                                <td>{{ payment.payment_amount }}</td>
+                                <td><button class="btn btn-primary" @click="delete_payment(payment.id)">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            
+        </div>
     </div>
 </template>
 
@@ -124,35 +155,8 @@ export default {
             loan_purpose : ''
 
         },
-        loanPurposeList : [
-        { value: '01-A', name: 'Dhan, Wheat, and Other Agriculture Seeds' },
-        { value: '01-B', name: 'Vegetable Cultivation' },
-        { value: '01-C', name: 'Livestock' },
-        { value: '01-D', name: 'Motor, Engine, and Others' },
-        { value: '01-E', name: 'Purchasing Land' },
-        { value: '01-F', name: 'Taking Land on Lease' },
-        { value: '01-G', name: 'Deepening the Well, Borewell, etc.' },
-        { value: '01-H', name: 'Other Production Work' },
-        { value: '02-A', name: 'Children\'s Education' },
-        { value: '02-B', name: 'Health' },
-        { value: '03-A', name: 'Health of Livestock' },
-        { value: '03-B', name: 'Goat Rearing' },
-        { value: '03-C', name: 'Business' },
-        { value: '03-D', name: 'Poultry' },
-        { value: '04-A', name: 'Worshipping' },
-        { value: '04-B', name: 'Vehicle' },
-        { value: '04-C', name: 'Housing' },
-        { value: '04-D', name: 'T.V., Mixture Machine, and Others' },
-        { value: '04-E', name: 'Repaying Old Outside Loan' },
-        { value: '04-F', name: 'Festival and Enjoyment' },
-        { value: '04-G', name: 'Marriage, Funeral, etc.' },
-        { value: '04-H', name: 'Shopping' },
-        { value: '04-I', name: 'Ration' },
-        { value: '04-J', name: 'Traveling' },
-        { value: '04-K', name: 'Case, Police, and Others' },
-        { value: '04-L', name: 'Purchasing Property' },
-        { value: '04-M', name: 'Other' }
-      ]
+        payments_list : [],
+        toggle_payments_list : false
         
     }
 
@@ -168,7 +172,7 @@ export default {
                         alert("Problem")
                     }
                 }).catch((error) => {
-                    alert(error.data)
+                    alert("Per member only one loan can be disbursed. Please select another member.")
                 })
 
 
@@ -195,6 +199,56 @@ export default {
         axios.get('/api/v1/loanPurposeList',  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
             this.loanPurposeList =  response.data
         })
+    },
+
+    list_member_payments(paymentType){ 
+        this.toggle_payments_list = true
+        if (paymentType == 0) {
+            axios.get('/api/v1/memberLoanPayments/' + this.meeting_id,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
+                this.payments_list =  response.data
+                if (this.payments_list.length == 0) {
+                    alert("No payments found")
+                }
+            }).catch((error) => {
+                alert(error.data)
+            })
+        } else if (paymentType == 1) {
+            axios.get('/api/v1/memberSavingsPayments/' + this.meeting_id,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
+                this.payments_list =  response.data 
+                if (this.payments_list.length == 0) {
+                    alert("No payments found")
+                }
+            }).catch((error) => {
+                alert(error.data)
+            })
+        }
+    },
+
+    delete_payment(payment_id){
+        if (this.receiptData.paymentType == 0) {
+            axios.delete('/api/v1/memberLoanPayments',  { headers:{ 'Token': localStorage.getItem('token') } , data: {"id": payment_id} }).then((response) => {
+                if(response.status == 200){
+                    alert("Receipt deleted Successfully!") 
+                    this.list_member_payments(this.receiptData.paymentType);
+
+                }else{
+                    alert("Problem")
+                }
+            }).catch((error) => {
+                alert(error.data)
+            })
+        } else if (this.receiptData.paymentType == 1) {
+            axios.delete('/api/v1/memberSavingsPayments',  { headers:{ 'Token': localStorage.getItem('token') } , data: {"id": payment_id} } ).then((response) => {
+                if(response.status == 200){ 
+                    alert("Receipt deleted Successfully!")
+                    this.list_member_payments(this.receiptData.paymentType);
+                }else{
+                    alert("Problem")
+                }
+            }).catch((error) => {
+                alert(error.data)
+            })
+        }
     }
 }, 
 created(){
