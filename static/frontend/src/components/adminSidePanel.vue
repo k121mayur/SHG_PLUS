@@ -1,38 +1,26 @@
 <template>
-    <div class="side-panel card d-flex flex-column justify-content" >
+    <div class="side-panel card d-flex flex-column justify-content-start" >
         <div class="card-header custom-card-format">
              Actions
         </div>
         
-        <div class="element"> 
+        <div class="element" > 
             <RouterLink to="/dashboard">Home</RouterLink>
             <!-- <a href="">Group Data Entry</a> -->
         </div>
         
         <div class="element"> 
-            <RouterLink to="/dataEntry">Group Data Entry</RouterLink>
+            <RouterLink to="/newUser">Create New User</RouterLink>
             <!-- <a href="">Group Data Entry</a> -->
         </div>
         
         <div class="element"> 
-            <RouterLink to="/dataEntryReport">Data Entry Report</RouterLink>
+            <RouterLink to="/deleteUser">Delete User</RouterLink>
         </div>
 
         <div class="element"> 
-            <RouterLink to="/shareout">Shareout</RouterLink>
+            <RouterLink to="/changePassword">Change Password</RouterLink>
         </div>
-        
-        <div class="element"> 
-            <RouterLink to="/newMember">Add / Remove Member</RouterLink>
-        </div class="element">
-
-        <div class="element"> 
-            <RouterLink to="/newGroup">New Group Entry</RouterLink>
-        </div>
-
-        <div class="element"> 
-            <a href="#">Edit Group Details</a>
-        </div class="element">
     
     </div>
 

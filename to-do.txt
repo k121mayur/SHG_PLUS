@@ -1,2 +1,8 @@
-1) Meeting workflow After Closing the Component there should be emit event which should update the status. 
 
+1) Add insert trigger 
+
+2) Add Cash in hand in other receipts
+
+3) Loan account should have Sanctioned amount and Current balance 
+
+4)

@@ -6,6 +6,7 @@ import newGroupEntryView from '@/views/newGroupEntryView.vue'
 import newMemberEntryView from '@/views/newMemberEntryView.vue'
 import meetingWorkflowView from '@/views/meetingWorkflowView.vue'
 import dataEntryReportView from '@/views/dataEntryReportView.vue'
+import shareoutView from '@/views/shareoutView.vue'
 
 const routes = [
   {
@@ -58,6 +59,12 @@ const routes = [
     name: 'meetingWorkflow',
     props: true,
     component: meetingWorkflowView
+  },
+  {
+    path: '/shareout',
+    name: 'shareout',
+    props: false,
+    component: shareoutView
   }
 
 ]

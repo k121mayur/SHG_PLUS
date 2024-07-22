@@ -9,6 +9,7 @@
                     v-model="receiptData.transactionType" style="width: max-content;">
                     <option value="0">Loan</option>
                     <option value="1">Withdrawal from Savings Account</option>
+                    <option value="2">Cash in Hand</option>
                 </select>
 
                 <label for="loanAccount" class="form-label m-3" v-if="receiptData.transactionType === '0'">Select Loan
@@ -68,6 +69,23 @@
                     <input type="number" class="form-control short mx-3" id="withdrawalAmount"
                         v-model="receiptData.withdrawalAmount">
                 </div>
+                <div v-if="receiptData.transactionType == 2">
+                    <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 5%;">
+                        <label for="memberName" class="form-label col-md-4">Member Name</label>
+                        <select class="form-select mx-3" id="memberName" v-model="receiptData.member_id" style="width: max-content;">
+                            <option v-for="member in members_list" :value="member.value">{{member.name}}</option>
+                        </select>
+
+            <!-- <input type="text" class="form-control" id="memberName" v-model="receiptData.member_name" required> -->
+                    </div>
+                    <div class="mb-3 d-flex justify-content-start">
+                        <label for="withdrawalAmount" class="form-label col-md-5">Amount</label>
+                        <input type="number" min="1" class="form-control short mx-3" id="withdrawalAmount"
+                            v-model="receiptData.cash_in_hand_amt">
+                    </div>
+                </div>
+
+
             </div>
             <div class="d-flex flex-row justify-content-center align-items-center">
                 <button type="submit" class="btn btn-primary" v-if="receiptData.transactionType">Submit</button>
@@ -77,15 +95,19 @@
             <div>
                 <div v-if="show_loan_account_form" style="position: absolute;    top: 0%;    left: 0%;    width: 100%;    height: 110%;    background-color: white;    z-index: 1">
                     <form @submit.prevent="addLoanAccount">
+                        
                         <h3 class="text-center bg-dark p-3 text-light rounded-3">Add Loan Account</h3>
+                        <div class="d-flex flex-row-reverse">
+                            <button class="btn btn-danger" @click="toggle_loan_account_form">Close</button>
+                        </div>
                         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
                             <label for="bankName" class="form-label">Bank Name</label>
-                            <input type="text" class="form-control short mx-3" id="bankName"   v-model="new_loan_account.bank_name">
+                            <input type="text" class="form-control mx-3" id="bankName"   v-model="new_loan_account.bank_name" required>
                         </div>
                         
                         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
                             <label for="branchName" class="form-label">Branch Name</label>
-                            <input type="text" class="form-control short mx-3" id="branchName"   v-model="new_loan_account.branch_name">
+                            <input type="text" class="form-control short mx-3" id="branchName"   v-model="new_loan_account.branch_name" required>
                         </div>
                         
                         <!-- <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
@@ -94,15 +116,15 @@
                         </div> -->
                         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
                             <label for="accountNumber" class="form-label">Account Number</label>
-                            <input type="text" class="form-control short mx-3" id="accountNumber"   v-model="new_loan_account.account_number">
+                            <input type="text" class="form-control  mx-3" id="accountNumber"   v-model="new_loan_account.account_number" required>
                         </div>
                         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
                             <label for="accountNumber" class="form-label">Confirm Account Number</label>
-                            <input type="text" class="form-control short mx-3" id="accountNumber"   v-model="new_loan_account.confirm_account_number">
+                            <input type="text" class="form-control mx-3" id="accountNumber"   v-model="new_loan_account.confirm_account_number" placeholder="Must match with Account Number" required >
                         </div>
                         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;">
                             <label for="ifscCode" class="form-label">IFSC Code</label>
-                            <input type="text" class="form-control short mx-3" id="ifscCode"   v-model="new_loan_account.ifsc_code">
+                            <input type="text" class="form-control  mx-3" id="ifscCode"   v-model="new_loan_account.ifsc_code"required >
                         </div>
                         
                         <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; ">    
@@ -162,6 +184,30 @@
                             </tbody>
                         </table>
                     </div>
+
+
+                    <div style="position: absolute;    top: 0%;    left: 0%;    width: 100%;    height: 100%;    background-color: white;    z-index: 4;" v-if="receiptData.transactionType == 2 && this.cash_in_hand_receipt_list.length > 0">
+                        <div class="d-flex justify-content-end"><button class="btn btn-danger" @click="toggle_other_receipt = false">Close</button></div>
+                        <h2>Cash in Hand Receipts</h2>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Member Name</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(s, index) in cash_in_hand_receipt_list">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ s.memberName }}</td>
+                                    <td>Rs.{{ s.amount }} /-</td>
+                                    <td><button class="btn btn-primary" @click.prevent="deleteCashInHandReceipt(s.id)">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     
                 </div>  
             </div>
@@ -208,6 +254,7 @@ export default {
             toggle_other_receipt: false,
             loan_receipt_list: [],
             saving_receipt_list: [],
+            cash_in_hand_receipt_list: [],
             show_loan_account_form: false,
             new_loan_account: {
                 account_number: '',
@@ -230,7 +277,10 @@ export default {
 
                 savingsAccountId: '',
                 withdrawalDate: '',
-                withdrawalAmount: 0
+                withdrawalAmount: 0, 
+
+                member_id : null,
+                cash_in_hand_amt : 0
             },
 
 
@@ -272,8 +322,17 @@ export default {
                         this.receiptData.withdrawalDate = ''
                         this.receiptData.withdrawalAmount = 0
                     }
-            })}
-        },
+            })} else if (this.receiptData.transactionType === '2') {
+                axios.post('/api/v1/otherCashInHandReceipts', this.receiptData, { headers: { 'Token': localStorage.getItem('token') } }).then((response) => {
+                    if (response.status == 200) {
+                        this.receiptData.member_id = null,
+                        this.receiptData.cash_in_hand_amt = 0
+                        alert(response.data.message)
+                    }
+                }).catch((error) => {
+                    alert(error.data)
+                })
+        } },
 
                     fetchAccounts() {
                     //here the idea is to fetch the list of loan accounts from the server using meeting id to identify the SHG Id
@@ -302,6 +361,7 @@ export default {
                             
                             alert("Loan Account added Successfully!");
                             this.toggle_loan_account_form();
+                            this.fetchAccounts()
                         }
                     }).catch((error) => {
                         alert(error.data)
@@ -332,8 +392,17 @@ export default {
                         }).catch((error) => {
                             alert(error.data)
                         })
+                    } else if (t_id == 2) {
+                        axios.get('/api/v1/otherCashInHandReceipts/' + this.meeting_id, { headers: { 'Token': localStorage.getItem('token') } }).then((response) => {
+
+                            this.cash_in_hand_receipt_list = response.data
+                            if (this.cash_in_hand_receipt_list.length == 0) {
+                                alert("No receipts found")
+                            } else {
+                                this.toggle_other_receipt = true
+                            }})
                     }
-                 }, 
+                }, 
                  deleteLoanReceipt(id) {
                     axios.delete('/api/v1/otherLoanReceipts', { headers: { 'Token': localStorage.getItem('token') }, data: {"id": id} }).then((response) => {
                         if (response.status == 200) {
@@ -359,7 +428,20 @@ export default {
                     }).catch((error) => {
                         alert(error.data)
                     })
-                }
+                }, 
+
+                deleteCashInHandReceipt(id) {
+                    axios.delete('/api/v1/otherCashInHandReceipts', { headers: { 'Token': localStorage.getItem('token') }, data: {"id": id} }).then((response) => {
+                        if (response.status == 200) {
+                            alert("Receipt deleted Successfully!")
+                            this.toggle_other_receipt = false
+                        } else {
+                            alert("Problem Occured While Deleting Receipt!")
+                        }
+                    }).catch((error) => {
+                        alert(error.data)
+                    })
+                },
 
             },
 

@@ -78,14 +78,18 @@
             <button type="submit" class="btn btn-primary" v-if="receiptData.transactionType">Submit</button>
             <button type="button" class="btn btn-warning m-1" v-if="receiptData.transactionType" @click="list_other_payments(receiptData.transactionType)">List</button>
         </form>
-        <div v-if="toggle_payments_list">
-            <h2>Other Payments</h2>
+        <div v-if="toggle_payments_list && payments_list.length > 0" style="position: absolute; top: 0; left: 0; width: 100%; height: 110%; background-color: white; z-index: 10; overflow: auto;">
+            <div class="d-flex justify-content-end m-0" style="position: relative; top: 0; right: 0;">
+                <button class="btn btn-danger m-1" @click="toggle_payments_list = false">Close</button>
+            </div>
+            <h2 class="text-center bg-warning p-3 text-light">Other Payments</h2>
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>Sr. No.</th>
                         <th>Payment Type</th>
                         <th>Payment Amount</th>
+                        <th v-if="receiptData.transactionType == 0">Interest Amount</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -94,6 +98,7 @@
                         <td>{{ index+1 }}</td>
                         <td>{{ payment.payment_type }}</td>
                         <td>{{ payment.payment_amount }}</td>
+                        <td v-if="receiptData.transactionType == 0">{{payment.interest_amount }}</td>
                         <td><button class="btn btn-primary" @click="delete_payment(payment.id)">Delete</button></td>
                     </tr>
                 </tbody>
@@ -157,6 +162,7 @@ export default {
             cash_in_hand_member_id: null
 
         },
+        payments_list: []
         
 
 
@@ -228,8 +234,119 @@ export default {
             console.log(response.data.shg_id)
             this.shg_id = response.data.shg_id
         })
-}
 }, 
+ 
+    list_other_payments(t_type){
+        if (t_type == 0){
+            // bankEmiPayments
+            axios.get('/api/v1/bankEmiPayments/' + this.meeting_id,  { headers:{ 'Token': localStorage.getItem('token') } }).then((response) => {
+                if (response.status == 200) {
+                    if (response.data.length == 0) {
+                    alert("No Bank EMI payments found")
+                    this.payments_list = response.data
+                    } else {
+                        this.toggle_payments_list = true
+                        this.payments_list = response.data
+                    }
+                } 
+            }).catch((error) => {
+                alert(error.data)
+            })
+        } else if (t_type == 1){
+            axios.get('/api/v1/savingsAccountPayments/' + this.meeting_id,  { headers:{ 'Token': localStorage.getItem('token') } }).then((response) => {
+                if (response.status == 200) {
+                    if (response.data.length == 0) {
+                    alert("No Savings Account deposits found")
+                    this.payments_list = response.data
+                    } else {
+                        this.toggle_payments_list = true
+                        this.payments_list = response.data
+                    }
+                } 
+            }).catch((error) => {
+                alert(error.data)
+            })
+        } else if (t_type == 2){
+            // serviceChargePayments
+
+            axios.get('/api/v1/serviceChargePayments/' + this.meeting_id,  { headers:{ 'Token': localStorage.getItem('token') } }).then((response) => {
+                if (response.status == 200) {
+                    if (response.data.length == 0) {
+                    alert("No Service Charge payments found")
+                    this.payments_list = response.data
+                    } else {
+                        this.toggle_payments_list = true
+                        this.payments_list = response.data
+                    }
+                } 
+            }).catch((error) => {
+                alert(error.data)
+            })
+        } else if (t_type == 3){
+            axios.get('/api/v1/cashInHandPayments/' + this.meeting_id,  { headers:{ 'Token': localStorage.getItem('token') } }).then((response) => {
+                if (response.status == 200) {
+                    if (response.data.length == 0) {
+                    alert("No Cash in Hand payments found")
+                    this.payments_list = response.data
+                    } else {
+                        this.toggle_payments_list = true
+                        this.payments_list = response.data
+                    }
+                } 
+                }).catch((error) => {
+                    alert(error.data)
+                })
+            }
+        },
+
+        delete_payment(payment_id){
+            if (this.receiptData.transactionType == 0) {
+                axios.delete('/api/v1/bankEmiPayments',  { headers:{ 'Token': localStorage.getItem('token') } , data: {"id": payment_id} }).then((response) => {
+                    if(response.status == 200){
+                        alert("Receipt deleted Successfully!")
+                        this.list_other_payments(this.receiptData.transactionType);
+                    }else{
+                        alert("Problem")
+                    }
+                }).catch((error) => {
+                    alert(error.data)
+                })
+            } else if (this.receiptData.transactionType == 1) {
+                axios.delete('/api/v1/savingsAccountPayments',  { headers:{ 'Token': localStorage.getItem('token') } , data: {"id": payment_id} } ).then((response) => {
+                    if(response.status == 200){
+                        alert("Receipt deleted Successfully!")
+                        this.list_other_payments(this.receiptData.transactionType);
+                    }else{
+                        alert("Problem")
+                    }
+                }).catch((error) => {
+                    alert(error.data)
+                })
+            } else if (this.receiptData.transactionType == 2) {
+                axios.delete('/api/v1/serviceChargePayments',  { headers:{ 'Token': localStorage.getItem('token') } , data: {"id": payment_id} } ).then((response) => {
+                    if(response.status == 200){
+                        alert("Receipt deleted Successfully!")
+                        this.list_other_payments(this.receiptData.transactionType);
+                    }else{
+                        alert("Problem")
+                    }
+                }).catch((error) => {
+                    alert(error.data)
+                })
+            } else if (this.receiptData.transactionType == 3) {
+                axios.delete('/api/v1/cashInHandPayments',  { headers:{ 'Token': localStorage.getItem('token') } , data: {"id": payment_id} } ).then((response) => {
+                    if(response.status == 200){
+                        alert("Receipt deleted Successfully!")
+                        this.list_other_payments(this.receiptData.transactionType);
+                    }else{
+                        alert("Problem")
+                    }
+                }).catch((error) => {
+                    alert(error.data)    
+                })
+            }
+        }
+    }, 
 
 created(){
     this.fetchShgId()

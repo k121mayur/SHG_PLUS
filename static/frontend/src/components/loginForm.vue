@@ -46,7 +46,7 @@ export default {
   name: 'loginForm',
   data() {
     return {
-      role: "operator", // This might not be ideal, see note below
+      role: "", // This might not be ideal, see note below
       email: "",
       password: "",
       server,

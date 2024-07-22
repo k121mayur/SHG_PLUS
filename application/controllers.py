@@ -42,7 +42,7 @@ def shgID(meeting_id):
 
 
 @auth_required('token')
-@roles_required( 'operator')
+@roles_required('operator')
 @app.route("/meeting_status/<int:meeting_id>")
 def meeting_status(meeting_id):
     #Case 1 : Attendece and Member Receipts are not matching
@@ -188,5 +188,39 @@ def internal_meeting_status(meeting_id):
         else:
             return {"meeting_status" : "Meeting Entry Not Started", "status_class" : "text-danger"}
         
+@app.route("/shareoutReport/<int:shg_id>")
+@auth_required('token')
+@roles_required('operator')
+def shareoutReport(shg_id):
+    f_date = db.session.query(SHG.formation_date).filter(SHG.id == shg_id).first()[0]
 
+    current_date = datetime.today()
+
+    diff = current_date.date() - f_date
+
+    if ( diff < timedelta(weeks=52)):
+        return jsonify(False)
+    else:
+        data = [
+            {
+                "name" : "Name", 
+                "savings" : "Savings",
+                "loan_outstanding" : "Loan Outstanding",
+                "interest_outstanding": "Interest Outstanding", 
+                "Difference" : "Difference", 
+                "Amount Payble": "Amount Payble",
+                "Amount Receivable": "Amount Receivable"
+            }
+        ]
+
+        members = db.session.query(Member).filter(Member.shg_id == shg_id).all()
+
+        return jsonify(data)
+
+
+
+#route all unreconignized routes to /
+@app.route('/<path:path>')
+def all(path):
+    return "<h1>It Seems that you are accessing the URL manually. For security reason this has been blocked. <a href='/'>Click here to Go Home</a></h1>"
 

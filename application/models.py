@@ -55,6 +55,7 @@ class SHG(db.Model):
     staff_name = db.Column(db.String(80), nullable=False)
     samuh_sakhi_name = db.Column(db.String(80), nullable=False)
     per_share_size_in_INR = db.Column(db.Integer, nullable=False)
+    
     active = db.Column(db.Boolean, nullable=False, default=True)
 
 
@@ -70,6 +71,11 @@ class shgBankAccount(db.Model):
     shg_id = db.Column(db.Integer, db.ForeignKey('shg.id'), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
 
+
+class schemes(db.Model):
+    __tablename__ = 'schemes'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    scheme_name = db.Column(db.String(80), nullable=False)
 
 class members(db.Model):
     __tablename__ = 'members'
@@ -98,8 +104,6 @@ class members(db.Model):
     total_no_of_members_migrated = db.Column(db.Integer)
     main_source_of_income = db.Column(db.String(50))
     head_of_the_family_name = db.Column(db.String(50))
-    scheme_1 = db.Column(db.Boolean)
-    scheme_2 = db.Column(db.Boolean)
     
     total_savings = db.Column(db.Integer, default=0)
     loan_outstanding = db.Column(db.Integer, default=0)
@@ -107,6 +111,12 @@ class members(db.Model):
 
     active = db.Column(db.Boolean, default=True)
 
+class schemeMemberEnrollment(db.Model):
+    __tablename__ = 'schemeMemberEnrollment'
+    id = db.Column(db.Integer, autoincrement = True)
+    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False, primary_key=True)
+    scheme_id = db.Column(db.Integer, db.ForeignKey('schemes.id'), nullable=False, primary_key=True)
+    __table_args__ = (db.UniqueConstraint('member_id', 'scheme_id'),)
 
 class memberBankAccount(db.Model):
     __tablename__ = 'memberBankAccount'
@@ -146,6 +156,7 @@ class memberSavingsReceipts(db.Model):
     receipt_amount = db.Column(db.Integer, nullable=False)
     __table_args__ = (db.UniqueConstraint('member_id', 'meeting_id'),)
 
+    
      # Add here event listener to add savings to the member's total savings when a receipt is made
 
 class memberLoanRepaymentReceipts(db.Model):
@@ -169,7 +180,6 @@ class memberFineReceipts(db.Model):
     receipt_date = db.Column(db.Date, nullable=True) # Receipt date currently I feel optional let us see if we need it
     receipt_amount = db.Column(db.Integer, nullable=False)
 
-
 class otherLoanReceipts(db.Model):
     __tablename__ = 'otherLoanReceipts'
     id = db.Column(db.Integer, primary_key=True)
@@ -183,7 +193,6 @@ class otherLoanReceipts(db.Model):
     loan_interest_rate = db.Column(db.Integer, nullable=False)
     __table_args__ = (db.UniqueConstraint('loan_account_id', 'meeting_id'),)
 
-
 class otherSavingsReceipts(db.Model):
     __tablename__ = 'otherSavingsReceipts'
     id = db.Column(db.Integer, primary_key=True)
@@ -192,6 +201,16 @@ class otherSavingsReceipts(db.Model):
     withdrawal_date = db.Column(db.Date, nullable=True)
     withdrawal_amount = db.Column(db.Integer, nullable=True)
     __table_args__ = (db.UniqueConstraint('savings_account_id', 'meeting_id'),)
+
+class otherCashInHandReceipts(db.Model):
+    __tablename__ = 'otherCashInHandReceipts'
+    id = db.Column(db.Integer, primary_key=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
+    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
+    receipt_date = db.Column(db.Date, nullable=False)
+    receipt_amount = db.Column(db.Integer, nullable=False)
+    __table_args__ = (db.UniqueConstraint('member_id', 'meeting_id'),)
+
 
 class loanPurposeList(db.Model):
     __tablename__ = 'loanPurposeList'
@@ -221,41 +240,6 @@ class memberSavingsPayments(db.Model):
     payment_amount = db.Column(db.Integer, nullable=False)
     __table_args__ = (db.UniqueConstraint('meeting_id', 'member_id'),)
 
-
-# def reduce_savings(session, flush_context, instances):
-#     for target in session.new:
-#         if isinstance(target, memberSavingsPayments):
-#             member_id = target.member_id
-#             payment_amount = target.payment_amount
-
-#             member = session.query(members).filter_by(member_id=member_id).first()
-
-#             if member:
-#                 new_total_savings  = member.total_savings - payment_amount
-#                 set_committed_value(member, 'total_savings', new_total_savings)
-#                 member.total_savings = new_total_savings
-
-# # def reduce_savings(mapper, connection, target):
-# #     # Get the member ID and payment amount from the target (the new memberSavingsPayments entry)
-# #     member_id = target.member_id
-# #     payment_amount = target.payment_amount
-
-# #     # Query the members table to get the member
-# #     member = db.session.query(members).filter_by(member_id=member_id).first()
-
-# #     if member:
-# #         # Reduce the total_savings by the payment amount
-# #         new_total_savings  = member.total_savings - payment_amount
-
-# #         set_committed_value(member, 'total_savings', new_total_savings)
-        
-# #         # Update the total_savings
-# #         member.total_savings = new_total_savings
-
-
-
-# event.listen(db.session, 'after_flush', reduce_savings)
-  
 
 class bankEmiPayments(db.Model):
     __tablename__ = 'bankEmiPayments'

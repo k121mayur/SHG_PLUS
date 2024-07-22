@@ -1,9 +1,6 @@
 from application.models import loanPurposeList
 from application.database import db
-from application.app import user_datastore
-from application.controllers import internal_meeting_status
-from datetime import datetime
-from application.controllers import internal_meeting_status
+
 
 
 def add_loan_purposes():

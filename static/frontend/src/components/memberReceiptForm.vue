@@ -52,7 +52,7 @@
                 <td>{{ receipt.principal[0] }}</td>
                 <td>{{ receipt.interest[0] }}</td>
                 <td>{{ receipt.fine[0] }}</td>
-                <td><button class="btn btn-primary" @click="delte_receipt(receipt.savings[1], receipt.principal[1], receipt.interest[1], receipt.fine[1])">Delete</button></td>
+                <td><button class="btn btn-primary" @click="delte_receipt(receipt.savings[1], receipt.principal[1], receipt.interest[1], receipt.fine[1], receipt.id)">Delete</button></td>
             </tr>
         </tbody>
     </table>
@@ -142,9 +142,9 @@ export default {
     })
     }, 
 
-    delte_receipt(savings, principal, interest, fine) {
+    delte_receipt(savings, principal, interest, fine, mem_id) {
         axios.delete('/api/v1/memberReceipt',  { headers:{ 'Token': localStorage.getItem('token') },
-         data: {savings: savings, principal: principal, interest: interest, fine: fine} } ).then((response) => {
+         data: {savings: savings, principal: principal, interest: interest, fine: fine, member_id: mem_id} } ).then((response) => {
             if(response.status == 200){
                 alert(response.data.message)
                 this.list_member_recipts()

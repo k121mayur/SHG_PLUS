@@ -81,8 +81,6 @@ new_member = members(
             total_no_of_members_migrated=4,
             main_source_of_income="Agri",
             head_of_the_family_name="Mayur Kharade",
-            scheme_1=1,
-            scheme_2=0
         )
 
 
@@ -109,8 +107,7 @@ new_member_1 = members(
             total_no_of_members_migrated=4,
             main_source_of_income="Agri",
             head_of_the_family_name="Mayur Kharade",
-            scheme_1=1,
-            scheme_2=0
+
         )
 
 
