@@ -4,7 +4,7 @@ from flask import current_app as app, jsonify, request
 from flask_restful import Resource
 from flask_restful import fields, marshal_with, marshal_with_field
 from flask_restful import reqparse
-from flask_security import auth_required, roles_required, hash_password
+from flask_security import auth_required, roles_required, hash_password, verify_password
 from email_validator import validate_email
 from datetime import datetime
 from sqlalchemy import func
@@ -18,14 +18,28 @@ class userApi(Resource):
     def get(self, user_id):
         pass
 
-    def delete(self, username, password):
-       pass
+    def delete(self, email):
+       user = user_datastore.find_user(email=email)
+       if user :
+          user_datastore.delete_user(user)
+          db.session.commit()
+          return jsonify(True)
+       else:
+          return jsonify(False)
  
-          
 
-    def put(self):
-       pass
-
+    def put(self, email_id):
+       user = user_datastore.find_user(email=email_id)
+       if user :
+         if verify_password(request.json.get('old_password'), user.password):
+            user.password = hash_password(request.json.get('new_password'))
+            db.session.commit()
+            return jsonify(True)
+         else:
+            return jsonify(False)
+       else:
+          return jsonify(True)
+   
       
     def post(self):
       data = request.json
@@ -41,9 +55,12 @@ class userApi(Resource):
       except:
         return "", 404
       if not user_datastore.find_user(email=email):
-        user_datastore.create_user(id = max_id, first_name=data.get('firstName'), last_name=data.get('lastName'), email=email, password=hash_password(data.get('password')),  last_login=datetime.now(), roles=['user'], date_created=datetime.now())
-      db.session.commit()
-      return jsonify(True)
+        user_datastore.create_user(id = max_id, first_name=data.get('first_name'), last_name=data.get('last_name'), email=email, password=hash_password(data.get('password')),  last_login=datetime.now(), roles=[data.get('role')], date_created=datetime.now())
+        db.session.commit()
+        return jsonify(True)
+      else:
+        return jsonify(False)
+      
 
 class shgApi(Resource):
    #  @auth_required('token')

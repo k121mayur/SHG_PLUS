@@ -81,3 +81,5 @@ api.add_resource(otherServiceChargePaymentsApi, "/api/v1/serviceChargePayments",
 api.add_resource(otherCashInHandPaymentsApi, "/api/v1/cashInHandPayments", "/api/v1/cashInHandPayments/<int:meeting_id>")
 
 api.add_resource(operatorDashboardApi, "/api/v1/operatorDashboard")
+
+api.add_resource(userApi, "/api/v1/user", "/api/v1/user/<string:email_id>")

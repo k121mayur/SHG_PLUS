@@ -38,7 +38,7 @@
                     <td v-if="group.action == 'Entry'">
                         <a :href="'/meetingWorkflow/' +  group.id " ><button class="btn btn-primary">Data Entry</button></a>
                     </td>
-                </tr>
+                </tr>``
             </tbody>
         </table>
     </div>
