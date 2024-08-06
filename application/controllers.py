@@ -224,3 +224,28 @@ def shareoutReport(shg_id):
 def all(path):
     return "<h1>It Seems that you are accessing the URL manually. For security reason this has been blocked. <a href='/'>Click here to Go Home</a></h1>"
 
+@app.route("/savingsReport/byMonth/<int:month>")
+def savingsReportByMonth(month):
+    
+    # Sr No | Shg Name | Expected Atttnedence | Actual Attendece | Expected Savings | Actual Savings | Number of Non savers |
+    mets = db.session.query(meetings).filter(func.strftime('%m', meetings.meeting_date) == f'{month:02d}').all()
+    data = []
+    for meeting in mets:
+        name = db.session.query(SHG.shg_name).filter(SHG.id == meeting.shg_id).first()[0]
+        expected_attendence = db.session.query(members.shg_id).filter(members.shg_id == meeting.shg_id, members.active == 1).count()
+        # meeting_id = db.session.query(meetings.id).filter(meetings.shg_id == shg.id, func.strftime('%m', meetings.meeting_date) == f'{month:02d}').first()
+        actual_attendence = db.session.query(meetingAttendence).filter(meetingAttendence.meeting_id == meeting.id, meetingAttendence.attended == 1).count() 
+        expected_savings = expected_attendence * db.session.query(SHG.per_share_size_in_INR).filter(SHG.id == meeting.shg_id).first()[0]
+        actual_savings = db.session.query(func.sum(memberSavingsReceipts.receipt_amount)).filter(memberSavingsReceipts.meeting_id == meeting.id).first()[0]
+        number_of_non_savers = actual_attendence - db.session.query(func.count(memberSavingsReceipts.receipt_amount)).filter(memberSavingsReceipts.meeting_id == meeting.id).first()[0] 
+
+        data.append({
+            "name" : name,
+            "meeting_date" : datetime.strftime(meeting.meeting_date, "%d-%b-%Y"),
+            "expected_attendence" : expected_attendence,
+            "actual_attendence" : actual_attendence,
+            "expected_savings" : expected_savings,
+            "actual_savings" : actual_savings,
+            "number_of_non_savers" : number_of_non_savers
+        })
+    return jsonify(data)

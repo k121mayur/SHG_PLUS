@@ -82,6 +82,9 @@ class members(db.Model):
 
     member_id = db.Column(db.Integer, primary_key=True)
     shg_id = db.Column(db.Integer, nullable=False)
+
+    joining_date = db.Column(db.Date, nullable=False)
+
     village = db.Column(db.String(50))
     household_code = db.Column(db.String(20), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
@@ -96,7 +99,7 @@ class members(db.Model):
     category = db.Column(db.String(20))
     caste = db.Column(db.String(20))
     number_of_family_members = db.Column(db.Integer, nullable=False)
-    mobile_number = db.Column(db.Integer, nullable=False, unique=True)
+    mobile_number = db.Column(db.Integer, nullable=False)
     total_land_kattha = db.Column(Numeric(precision=10, scale=2))
     total_irrigated_land_kattha = db.Column(db.Integer)
     total_no_of_goats = db.Column(db.Integer)

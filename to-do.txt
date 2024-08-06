@@ -5,4 +5,4 @@
 
 3) Loan account should have Sanctioned amount and Current balance 
 
-4)
+4) Whether there will be only one meeting in the month or more? 

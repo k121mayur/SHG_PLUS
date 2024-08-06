@@ -7,6 +7,7 @@ import axios from 'axios'
 
 
 export const server = "http://127.0.0.1:5000"
+// export const server = "https://shgplus.pythonanywhere.com"
 axios.defaults.baseURL = server
 
 createApp(App).use(store).use(router).mount('#app')

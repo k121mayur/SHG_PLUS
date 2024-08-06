@@ -61,6 +61,8 @@ print(check_1)
 new_member = members(
             shg_id=1,  # Assuming `id` is the correct identifier
             village="Aundh",
+
+            joining_date= datetime.today().date(),
             household_code="220",
             first_name="Mayur",
             father_husband_name="Jaywant",
@@ -87,6 +89,7 @@ new_member = members(
 new_member_1 = members(
             shg_id=1,  # Assuming `id` is the correct identifier
             village="Aundh",
+            joining_date= datetime.today().date(),
             household_code="220",
             first_name="Komal",
             father_husband_name="Vilas",
@@ -107,7 +110,6 @@ new_member_1 = members(
             total_no_of_members_migrated=4,
             main_source_of_income="Agri",
             head_of_the_family_name="Mayur Kharade",
-
         )
 
 
