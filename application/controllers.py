@@ -48,11 +48,11 @@ def meeting_status(meeting_id):
     #Case 1 : Attendece and Member Receipts are not matching
 
     attendence = len(db.session.query(meetingAttendence).filter(meetingAttendence.meeting_id == meeting_id, meetingAttendence.attended == 1).all())
-    print(attendence)
+    
     member_receipts = [r.member_id for r in db.session.query(memberSavingsReceipts.member_id).filter(memberSavingsReceipts.meeting_id == meeting_id).all() ]
     loan_repayment_receipts = [r.member_id for r in db.session.query(memberLoanRepaymentReceipts.member_id).filter(memberLoanRepaymentReceipts.meeting_id == meeting_id).all() ]
     receipts = set(member_receipts + loan_repayment_receipts)
-    print(receipts,member_receipts, loan_repayment_receipts)
+
     if len(receipts) != attendence:
         return jsonify({"meeting_status" : "Member receipts entry pending", "status_class" : "text-danger"})
     
@@ -90,8 +90,8 @@ def meeting_status(meeting_id):
     bank_emi_total = db.session.query(func.sum(bankEmiPayments.principal_amount)).filter(bankEmiPayments.meeting_id == meeting_id).first()[0]
     bank_emi_total = bank_emi_total if bank_emi_total else 0
     
-    bank_emi_interest_total = db.session.query(func.sum(bankEmiPayments.interest_amount)).filter(bankEmiPayments.meeting_id == meeting_id).first()[0]
-    bank_emi_interest_total = bank_emi_interest_total if bank_emi_interest_total else 0
+    # bank_emi_interest_total = db.session.query(func.sum(bankEmiPayments.interest_amount)).filter(bankEmiPayments.meeting_id == meeting_id).first()[0]
+    # bank_emi_interest_total = bank_emi_interest_total if bank_emi_interest_total else 0
     
     savings_account_payments_total = db.session.query(func.sum(savingsAccountPayments.payment_amount)).filter(savingsAccountPayments.meeting_id == meeting_id).first()[0]
     savings_account_payments_total = savings_account_payments_total if savings_account_payments_total else 0
@@ -99,10 +99,10 @@ def meeting_status(meeting_id):
     service_charge_payments_total = db.session.query(func.sum(otherServiceChargePayments.payment_amount)).filter(otherServiceChargePayments.meeting_id == meeting_id).first()[0]
     service_charge_payments_total = service_charge_payments_total if service_charge_payments_total else 0
     
-    cash_in_hand_total = db.session.query(func.sum(otherCashInHandPayments.payment_amount)).filter(otherCashInHandPayments.meeting_id == meeting_id).first()[0]
+    cash_in_hand_total = db.session.query(func.sum(otherCashInBoxPayments.payment_amount)).filter(otherCashInBoxPayments.meeting_id == meeting_id).first()[0]
     cash_in_hand_total = cash_in_hand_total if cash_in_hand_total else 0
 
-    total_payments = member_loan_total + member_savings_return_total + bank_emi_total + bank_emi_interest_total + savings_account_payments_total + service_charge_payments_total + cash_in_hand_total
+    total_payments = member_loan_total + member_savings_return_total + bank_emi_total + savings_account_payments_total + service_charge_payments_total + cash_in_hand_total
 
 
     print(total_payments, total_receipts)
@@ -162,8 +162,8 @@ def internal_meeting_status(meeting_id):
     bank_emi_total = db.session.query(func.sum(bankEmiPayments.principal_amount)).filter(bankEmiPayments.meeting_id == meeting_id).first()[0]
     bank_emi_total = bank_emi_total if bank_emi_total else 0
     
-    bank_emi_interest_total = db.session.query(func.sum(bankEmiPayments.interest_amount)).filter(bankEmiPayments.meeting_id == meeting_id).first()[0]
-    bank_emi_interest_total = bank_emi_interest_total if bank_emi_interest_total else 0
+    # bank_emi_interest_total = db.session.query(func.sum(bankEmiPayments.interest_amount)).filter(bankEmiPayments.meeting_id == meeting_id).first()[0]
+    # bank_emi_interest_total = bank_emi_interest_total if bank_emi_interest_total else 0
     
     savings_account_payments_total = db.session.query(func.sum(savingsAccountPayments.payment_amount)).filter(savingsAccountPayments.meeting_id == meeting_id).first()[0]
     savings_account_payments_total = savings_account_payments_total if savings_account_payments_total else 0
@@ -171,10 +171,10 @@ def internal_meeting_status(meeting_id):
     service_charge_payments_total = db.session.query(func.sum(otherServiceChargePayments.payment_amount)).filter(otherServiceChargePayments.meeting_id == meeting_id).first()[0]
     service_charge_payments_total = service_charge_payments_total if service_charge_payments_total else 0
     
-    cash_in_hand_total = db.session.query(func.sum(otherCashInHandPayments.payment_amount)).filter(otherCashInHandPayments.meeting_id == meeting_id).first()[0]
+    cash_in_hand_total = db.session.query(func.sum(otherCashInBoxPayments.payment_amount)).filter(otherCashInBoxPayments.meeting_id == meeting_id).first()[0]
     cash_in_hand_total = cash_in_hand_total if cash_in_hand_total else 0
 
-    total_payments = member_loan_total + member_savings_return_total + bank_emi_total + bank_emi_interest_total + savings_account_payments_total + service_charge_payments_total + cash_in_hand_total
+    total_payments = member_loan_total + member_savings_return_total + bank_emi_total + savings_account_payments_total + service_charge_payments_total + cash_in_hand_total
 
 
     # print(total_payments, total_receipts)
@@ -188,35 +188,6 @@ def internal_meeting_status(meeting_id):
         else:
             return {"meeting_status" : "Meeting Entry Not Started", "status_class" : "text-danger"}
         
-@app.route("/shareoutReport/<int:shg_id>")
-@auth_required('token')
-@roles_required('operator')
-def shareoutReport(shg_id):
-    f_date = db.session.query(SHG.formation_date).filter(SHG.id == shg_id).first()[0]
-
-    current_date = datetime.today()
-
-    diff = current_date.date() - f_date
-
-    if ( diff < timedelta(weeks=52)):
-        return jsonify(False)
-    else:
-        data = [
-            {
-                "name" : "Name", 
-                "savings" : "Savings",
-                "loan_outstanding" : "Loan Outstanding",
-                "interest_outstanding": "Interest Outstanding", 
-                "Difference" : "Difference", 
-                "Amount Payble": "Amount Payble",
-                "Amount Receivable": "Amount Receivable"
-            }
-        ]
-
-        members = db.session.query(Member).filter(Member.shg_id == shg_id).all()
-
-        return jsonify(data)
-
 
 
 #route all unreconignized routes to /
@@ -235,7 +206,7 @@ def savingsReportByMonth(month):
         expected_attendence = db.session.query(members.shg_id).filter(members.shg_id == meeting.shg_id, members.active == 1).count()
         # meeting_id = db.session.query(meetings.id).filter(meetings.shg_id == shg.id, func.strftime('%m', meetings.meeting_date) == f'{month:02d}').first()
         actual_attendence = db.session.query(meetingAttendence).filter(meetingAttendence.meeting_id == meeting.id, meetingAttendence.attended == 1).count() 
-        expected_savings = expected_attendence * db.session.query(SHG.per_share_size_in_INR).filter(SHG.id == meeting.shg_id).first()[0]
+        expected_savings = expected_attendence * db.session.query(SHG.per_share_size_in_INR).filter(SHG.id == meeting.shg_id).first()[0] * 5
         actual_savings = db.session.query(func.sum(memberSavingsReceipts.receipt_amount)).filter(memberSavingsReceipts.meeting_id == meeting.id).first()[0]
         number_of_non_savers = actual_attendence - db.session.query(func.count(memberSavingsReceipts.receipt_amount)).filter(memberSavingsReceipts.meeting_id == meeting.id).first()[0] 
 
@@ -249,3 +220,63 @@ def savingsReportByMonth(month):
             "number_of_non_savers" : number_of_non_savers
         })
     return jsonify(data)
+
+@app.route("/share_price/<int:meeting_id>")
+def share_price(meeting_id):
+    shg_id = db.session.query(meetings.shg_id).filter(meetings.id == meeting_id).first()[0]
+    share_price = db.session.query(SHG.per_share_size_in_INR).filter(SHG.id == shg_id).first()[0]
+    return jsonify(share_price)
+
+@app.route("/shareout_report/<int:group_id>")
+def shareout_report(group_id):
+    # total_money = Member_Loan_OS + Cash at bank & cash at box
+
+    members_list = db.session.query(members).filter(members.shg_id == group_id).all()
+
+
+    share_price = db.session.query(SHG.per_share_size_in_INR).filter(SHG.id == group_id).first()[0]
+    cash_in_box = db.session.query(SHG.cash_in_box).filter(SHG.id == group_id).first()[0]
+    cash_at_bank = db.session.query(func.sum(shgBankAccount.balance)).filter(shgBankAccount.shg_id == group_id).filter(shgBankAccount.account_type == "savings").first()[0]
+    bank_loan_outstanding = db.session.query(func.sum(shgBankAccount.balance)).filter(shgBankAccount.shg_id == group_id).filter(shgBankAccount.account_type == "loan").first()[0]
+    
+    member_loan_outstanding = 0
+    member_interest_outstanding = 0 
+    total_member_savings = 0
+    for member in members_list:
+        member_loan_outstanding += member.loan_outstanding
+        member_interest_outstanding += member.interest_outstanding
+        total_member_savings += member.total_savings
+
+    total_number_of_shares = total_member_savings // share_price
+
+
+    total_amount = cash_at_bank + cash_in_box + member_loan_outstanding + member_interest_outstanding
+    paybale = bank_loan_outstanding
+
+    net_profit = total_amount - paybale
+    net_profit_per_share = net_profit / total_number_of_shares
+
+    final_data = [{"shg": {}, "members":[]}]
+
+    final_data[0]["shg"] = {
+        "name" : db.session.query(SHG.shg_name).filter(SHG.id == group_id).first()[0],
+        "total_number_of_shares" : total_number_of_shares,
+        "total_member_savings" : total_member_savings,
+        "bank_loan_outstanding" : bank_loan_outstanding,
+        "total_amount" : total_amount,
+        "paybale" : paybale,
+        "net_profit" : net_profit
+    }
+    for member in members_list:
+        final_data[0]["members"].append({
+
+            "name" : member.first_name + " " + member.father_husband_name + " " + member.last_name,
+            "total_savings" : member.total_savings,
+            "member_loan_outstanding" : member.loan_outstanding,
+            "member_interest_outstanding" : member.interest_outstanding,
+            "savings_after_loan" : member.total_savings - member.loan_outstanding - member.interest_outstanding,
+            "profit" : (member.total_savings // share_price) * net_profit_per_share
+
+        })
+
+    return jsonify(final_data)

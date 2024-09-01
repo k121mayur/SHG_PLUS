@@ -56,6 +56,10 @@ class SHG(db.Model):
     samuh_sakhi_name = db.Column(db.String(80), nullable=False)
     per_share_size_in_INR = db.Column(db.Integer, nullable=False)
     
+    cash_in_box = db.Column(db.Integer, nullable=False, default=0)
+    total_savings = db.Column(db.Integer, nullable=False, default=0)
+    total_fine_collection = db.Column(db.Integer, nullable=False, default=0)
+    
     active = db.Column(db.Boolean, nullable=False, default=True)
 
 
@@ -159,8 +163,6 @@ class memberSavingsReceipts(db.Model):
     receipt_amount = db.Column(db.Integer, nullable=False)
     __table_args__ = (db.UniqueConstraint('member_id', 'meeting_id'),)
 
-    
-     # Add here event listener to add savings to the member's total savings when a receipt is made
 
 class memberLoanRepaymentReceipts(db.Model):
     __tablename__ = 'memberLoanRepaymentReceipts'
@@ -205,14 +207,13 @@ class otherSavingsReceipts(db.Model):
     withdrawal_amount = db.Column(db.Integer, nullable=True)
     __table_args__ = (db.UniqueConstraint('savings_account_id', 'meeting_id'),)
 
-class otherCashInHandReceipts(db.Model):
-    __tablename__ = 'otherCashInHandReceipts'
+class otherCashInBoxReceipts(db.Model):
+    __tablename__ = 'otherCashInBoxReceipts'
     id = db.Column(db.Integer, primary_key=True)
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
-    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
     receipt_date = db.Column(db.Date, nullable=False)
     receipt_amount = db.Column(db.Integer, nullable=False)
-    __table_args__ = (db.UniqueConstraint('member_id', 'meeting_id'),)
+    __table_args__ = (db.UniqueConstraint('receipt_date', 'meeting_id'),)
 
 
 class loanPurposeList(db.Model):
@@ -251,7 +252,7 @@ class bankEmiPayments(db.Model):
     loan_account_id = db.Column(db.Integer, db.ForeignKey('shgBankAccount.id'), nullable=False)
     payment_date = db.Column(db.Date, nullable=False)
     principal_amount = db.Column(db.Integer, nullable=False)
-    interest_amount = db.Column(db.String(20), nullable=False)
+    # interest_amount = db.Column(db.String(20), nullable=False)
     __table_args__ = (db.UniqueConstraint('meeting_id', 'loan_account_id'),)
 
 
@@ -273,14 +274,14 @@ class otherServiceChargePayments(db.Model):
     member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False)
 
 
-class otherCashInHandPayments(db.Model):
-    __tablename__ = 'otherCashInHandPayments'
+class otherCashInBoxPayments(db.Model):
+    __tablename__ = 'otherCashInBoxPayments'
     id = db.Column(db.Integer, primary_key=True)
     meeting_id = db.Column(db.Integer, db.ForeignKey('meetings.id'), nullable=False)
     payment_date = db.Column(db.Date, nullable=False)
     payment_amount = db.Column(db.Integer, nullable=False)
-    member_id = db.Column(db.Integer, db.ForeignKey('members.member_id'), nullable=False) # Bank Emi / Interest / Travelling / etc
 
+    __table_args__ = (db.UniqueConstraint('payment_date', 'payment_amount'),)
 
 class shgBankLoan(db.Model):
     __tablename__ = 'shgBankLoan'

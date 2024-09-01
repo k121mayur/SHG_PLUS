@@ -51,7 +51,7 @@
                     height: 70%; border-radius: 10px; z-index: 2; border: solid 1px black; overflow: auto">
                     
                 <h1 style="border-bottom: solid 1px black; padding: 1%;">Member Receipts</h1> 
-                <memberReceiptForm :meeting_id = "meeting_id" :members_list = "members_list">
+                <memberReceiptForm :meeting_id = "meeting_id" :members_list = "members_list" :share_price="share_price">
                 </memberReceiptForm>
             </div>
         </div>
@@ -153,6 +153,11 @@ export default {
                 this.Meeting_Status = response.data.meeting_status
                 this.status_class = response.data.status_class
             })
+        },
+        fetchSharePrice(meeting_id){
+            axios.get('/share_price/' + meeting_id,  {headers: { 'Token': localStorage.getItem('token') }} ).then((response) => {
+                this.share_price = response.data
+            })
         }
     
 
@@ -161,6 +166,7 @@ mounted() {
         console.log(this.meeting_id)
         this.fetchMembers(this.meeting_id)
         this.fetchMeetingStatus(this.meeting_id)
+        this.fetchSharePrice(this.meeting_id)
     }
 }
 </script>

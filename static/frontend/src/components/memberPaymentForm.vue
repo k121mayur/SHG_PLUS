@@ -9,24 +9,24 @@
             <!-- <input type="text" class="form-control" id="memberName" v-model="receiptData.member_name" required> -->
         </div>
 
-        <div class="mb-3 d-flex justify-content-start">
+        <!-- <div class="mb-3 d-flex justify-content-start">
             <label for = "paymentType" class="form-label col-md-3">Payment Type</label>
             <select class="form-select mx-3" id="paymentType" style="width: max-content;" v-model="receiptData.paymentType">
                 <option value="0" selected>Loan</option>
                 <option value="1">Savings Return</option>
             </select>
-        </div>
+        </div> -->
 
         <div class="d-flex flex-row flex-wrap justify-content-start" v-if="receiptData.paymentType == 0" >
             
             <div class="mb-3 col-md-12 d-flex justify-content-start">
                 <label for="loanPurpose" class="form-label">Loan Purpose</label>
                 <select class="form-select mx-3" id="loanPurpose" v-model="receiptData.loan_purpose" style="width: max-content;">
-                        <option value="01-A">Dhan, Wheat, and Other Agriculture Seeds</option>
-                        <option value="01-B">Vegetable Cultivation</option>
-                        <option value="01-C">Livestock</option>
-                        <option value="01-D">Motor, Engine, and Others</option>
-                        <option value="01-E">Purchasing Land</option>
+                        <option value="A">Livelihood/Investment </option>
+                        <option value="B">Health</option>
+                        <option value="C">Education</option>
+                        <option value="D">Repayment of High interest loan</option>
+                        <!-- <option value="01-E">Purchasing Land</option>
                         <option value="01-F">Taking Land on Lease</option>
                         <option value="01-G">Deepening the Well, Borewell, etc.</option>
                         <option value="01-H">Other Production Work</option>
@@ -48,8 +48,13 @@
                         <option value="04-J">Traveling</option>
                         <option value="04-K">Case, Police, and Others</option>
                         <option value="04-L">Purchasing Property</option>
-                        <option value="04-M">Other</option>
+                        <option value="04-M">Other</option> -->
                 </select>
+            </div>
+
+            <div class="mb-3 col-md-12 d-flex justify-content-start">
+                <label for="loanDate" class="form-label">Loan Date</label>
+                <input type="date" :max="new Date().toISOString().split('T')[0]" class="form-control short mx-3"  id="loanDate" v-model="receiptData.loan_date" required>
             </div>
 
             <div class="mb-3 col-md-12 d-flex justify-content-start">
@@ -58,7 +63,7 @@
             </div>
         </div>
 
-        <div class="d-flex flex-row flex-wrap" v-if="receiptData.paymentType == 1" >
+        <!-- <div class="d-flex flex-row flex-wrap" v-if="receiptData.paymentType == 1" >
             
             <div class="mb-3 col-md-12">
                 <label for="savingsReturnReason" class="form-label">Savings Return Reason</label>
@@ -74,9 +79,9 @@
                     <label for="savings" class="form-label">Savings Return Amount</label>
                     <input type="number" class="form-control short mx-3" id="savings" v-model="receiptData.savings_return_amount">
             </div>
-        </div>
+        </div> -->
             <button type="submit" class="btn btn-primary">Submit</button> 
-            <button type="button" class="btn btn-warning m-1" @click="list_member_payments(receiptData.paymentType)">List</button>
+            <button type="button" class="btn btn-warning m-1" @click="list_member_payments(0)">List</button>
         </form>
 
         <div v-if="toggle_payments_list && payments_list.length > 0" style="position: absolute; top: 0; left: 0; width: 100%; height: 110%; background-color: white;">
@@ -150,6 +155,7 @@ export default {
             meeting_id: this.meeting_id,
             member_id: '',
             loan_amount: 0,
+            loan_date: '',
             savings_return_amount: 0,
             savingsReturnReason : '',
             loan_purpose : ''

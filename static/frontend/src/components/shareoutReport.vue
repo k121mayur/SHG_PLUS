@@ -18,6 +18,20 @@
                 </div>
             </form>
         </div>
+
+        <div id="shg_data" class="container">
+            <div>
+                <p>Total Savings</p>
+                <p>Bank Loan Outstanding</p>
+                <p>Member Loan Outstanding</p>
+                <p>----------</p>
+
+                <p>Member Loan Outstanding</p>
+                <p>Cash at Bank</p>
+                <p>Cash at Box</p>
+
+            </div>
+        </div>
     </div>
 </template>
 
@@ -35,6 +49,7 @@ export default {
 
     data() {
         return {
+            data: [],
             shg_list: [],
             shg_name: null,
             shg_id: null,
@@ -47,11 +62,12 @@ export default {
     methods: {
 
         fetchShareoutReport() {
-            axios.get('/shareoutReport/'+ this.shg_name.value, {headers: {'Token': localStorage.getItem('token')}}).then((response) => {
+            axios.get('/shareout_report/'+ this.shg_name.value, {headers: {'Token': localStorage.getItem('token')}}).then((response) => {
                 if (response.data == false){
                     alert('SHG has not completed 52 weeks for shareout')
                 }else{
-                    alert('SHG has completed 52 weeks for shareout')
+                    this.data = response.data
+                    console.log(this.data)
                 }
 
             })

@@ -14,7 +14,7 @@
         </div>
 
         <div class="element"> 
-            <RouterLink to="/savingsReport">Monthly Savings Report</RouterLink>
+            <RouterLink to="/savingsReport">Monthly Report</RouterLink>
         </div>
         
         <div class="element"> 

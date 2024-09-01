@@ -109,6 +109,9 @@ export default {
 },
 
   addMeeting(){
+    if (this.attendece < (this.members_list.length) /2){
+        alert("Meeting should have atleast 50% members present")
+    } else {
     let data = {}
     data.shg = this.shg_name
     data.attendece = this.members_list
@@ -133,16 +136,20 @@ export default {
     }).catch((error) => {
         alert(error.response.data.message)
     })
-
+    }
 
   }
 },
  created() {
   this.fetchSHG();
-}
+}, 
+computed: {
+    attendece () {
+        return this.members_list.filter(member => member.present).length
+    }
 
 
-}
+}}
 
 </script>
 

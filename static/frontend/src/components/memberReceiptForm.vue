@@ -10,11 +10,20 @@
             <!-- <input type="text" class="form-control" id="memberName" v-model="receiptData.member_name" required> -->
         </div>
         <div class="d-flex flex-row flex-wrap" >
-            <div class="mb-3 col-md-6">
-                <label for="savings" class="form-label">Savings</label>
-                <input type="number" class="form-control short mx-3" id="savings" v-model="receiptData.savings">
+            <div class="d-flex flex-row col-md-8">
+                <div class="mb-3 d-flex justify-content-start">
+                    <label for="shares" class="form-label">Number of Shares</label>
+                    <select class="form-select mx-3" id="shares" v-model="receiptData.shares" style="width: max-content;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5" selected>5</option>
+                    </select> 
+                    <span class="text-success"> Savings : <strong >{{ this.sav }}</strong></span>
+                </div>
             </div>
-            <div class="mb-3 col-md-6 ">
+            <div class="mb-3 col-md-4 mt-2">
                 <label for="principal" class="form-label">Principal</label>
                 <input type="number" class="form-control short mx-3" id="principal" v-model="receiptData.principal">
             </div>
@@ -89,6 +98,10 @@ export default {
         members_list:{
             type: Array,
             required: true
+        }, 
+        share_price: {
+            type: Number,
+            required: true
         }
 
     },
@@ -99,17 +112,20 @@ export default {
             member_id: '',
             receipt_date: '',
             receipt_amount: 0,
+            shares: 0,
             savings: 0,
             principal: 0,
             interest: 0,
             fine: 0 
         }, 
+        share_price: this.share_price,
         receipts_list: false,
         toggle_receipts_list: false
     }
     },
     methods : {
         submitForm() { 
+            this.receiptData.savings = this.sav;
             if (this.receiptData.member_id == '') {
                 alert("Please select member")
             }else if( this.receiptData.savings == 0 && this.receiptData.principal == 0 && this.receiptData.interest == 0 && this.receiptData.fine == 0 ){
@@ -152,6 +168,11 @@ export default {
                 alert("Problem")
             }
         })  
+    }
+}, 
+computed: {
+    sav() {
+        return this.share_price * this.receiptData.shares
     }
 }
 }

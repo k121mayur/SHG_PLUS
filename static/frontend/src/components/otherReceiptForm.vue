@@ -4,25 +4,26 @@
 
             <div class="d-flex flex-row flex-wrap">
 
-                <label for="transactionType" class="form-label m-3">Select Receipt Type</label>
+                <label for="transactionType" class="form-label my-1 mx-2">Select Receipt Type</label>
                 <select class="form-select m-3" @change="fetchAccounts" id="transactionType"
                     v-model="receiptData.transactionType" style="width: max-content;">
                     <option value="0">Loan</option>
                     <option value="1">Withdrawal from Savings Account</option>
-                    <option value="2">Cash in Hand</option>
+                    <option value="2">Cash in Box</option>
                 </select>
-
-                <label for="loanAccount" class="form-label m-3" v-if="receiptData.transactionType === '0'">Select Loan
-                    Account</label>
-                <select class="form-select m-3" id="loanAccount" v-model="receiptData.loanAccountId"
-                    style="width: max-content;" v-if="receiptData.transactionType === '0'" required>
-                    <option v-for="account in Account_list" :value="account.id">{{ account.bank_name }}-{{
-                        account.account_number }}</option>
-                    <option value="0">New Account</option>
-                </select>
+                <div class="mb-3 col-md-7 mx-0 my-0"> 
+                    <label for="loanAccount" class="form-label my-3 mx-1" v-if="receiptData.transactionType === '0'">Select Loan
+                        Account</label>
+                    <select class="form-select my-3" id="loanAccount" v-model="receiptData.loanAccountId"
+                        style="width: max-content;" v-if="receiptData.transactionType === '0'" required>
+                        <option v-for="account in Account_list" :value="account.id">{{ account.bank_name }}-{{
+                            account.account_number }}</option>
+                        <option value="0">New Account</option>
+                    </select>
+                </div>
                 <!-- <div> Balance : </div> -->
 
-                <div class="mb-3 col-md-6" v-if="receiptData.transactionType === '0'">
+                <div class="mb-3 col-md-5" v-if="receiptData.transactionType === '0'">
                     <label for="loan" class="form-label"> Loan Type </label>
                     <select class="form-select mx-3" id="loan" v-model="receiptData.loanType" required>
                         <option value="CC">CC Loan</option>
@@ -34,6 +35,12 @@
                     <label for="loan" class="form-label"> Loan Amount </label>
                     <input type="number" class="form-control short mx-3" id="loan" v-model="receiptData.loanAmount"
                         required min="1000">
+                </div>
+
+                <div class="mb-3 col-md-6 d-flex flex-row justify-content-end" v-if="receiptData.transactionType === '0'">
+                    <label for="loan" class="form-label"> Loan Date </label>
+                    <input type="date" class="form-control mx-3 col-md-8" id="loan" v-model="receiptData.loanDate"
+                    :max="new Date().toISOString().split('T')[0]" required>
                 </div>
 
 
@@ -70,14 +77,14 @@
                         v-model="receiptData.withdrawalAmount">
                 </div>
                 <div v-if="receiptData.transactionType == 2">
-                    <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 5%;">
+                    <!-- <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 5%;">
                         <label for="memberName" class="form-label col-md-4">Member Name</label>
                         <select class="form-select mx-3" id="memberName" v-model="receiptData.member_id" style="width: max-content;">
                             <option v-for="member in members_list" :value="member.value">{{member.name}}</option>
                         </select>
 
             <!-- <input type="text" class="form-control" id="memberName" v-model="receiptData.member_name" required> -->
-                    </div>
+                    <!-- </div> -->
                     <div class="mb-3 d-flex justify-content-start">
                         <label for="withdrawalAmount" class="form-label col-md-5">Amount</label>
                         <input type="number" min="1" class="form-control short mx-3" id="withdrawalAmount"
@@ -272,6 +279,7 @@ export default {
                 loanAccountId: '',
                 loanType: '',
                 loanAmount: 0,
+                loanDate: '',
                 tenure: 0,
                 interestRate: 0,
 
@@ -289,7 +297,6 @@ export default {
     },
     methods: {
         addOtherReceipt() {
-            console.log("Other receipt function is called")
             console.log(this.receiptData.transactionType)
             if (this.receiptData.transactionType === '0') {
                 if (this.receiptData.loanAccountId === '0') {

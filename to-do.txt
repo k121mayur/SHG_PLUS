@@ -6,3 +6,21 @@
 3) Loan account should have Sanctioned amount and Current balance 
 
 4) Whether there will be only one meeting in the month or more? 
+
+5) Add Shg Current Status Each Month Wise sheet should generate
+
+6) Option to add leaders
+
+7) Option to add Savings / Loan Account
+
+8) Edit Group Details Implementation
+
+9) Tally All details. 
+
+10) At the end add security to the application. 
+
+11) Cash in Box validation - Complete Tally implementation
+
+12) Total Collection in Payment Sections
+
+13) 

@@ -71,14 +71,14 @@ api.add_resource(memberReceiptApi, "/api/v1/memberReceipt", "/api/v1/memberRecei
 api.add_resource(shgBankAccountApi, "/api/v1/ShgAccount", "/api/v1/ShgAccount/<int:shg_id>", "/api/v1/ShgAccount/<int:shg_id>/<int:account_type>")
 api.add_resource(otherLoanReceiptsApi, "/api/v1/otherLoanReceipts" , "/api/v1/otherLoanReceipts/<int:meeting_id>")
 api.add_resource(otherSavingsReceiptsApi, "/api/v1/otherSavingsReceipts", "/api/v1/otherSavingsReceipts/<int:meeting_id>")
-api.add_resource(otherCashInHandReceiptsApi, "/api/v1/otherCashInHandReceipts", "/api/v1/otherCashInHandReceipts/<int:meeting_id>")
+api.add_resource(otherCashInBoxReceiptsApi, "/api/v1/otherCashInHandReceipts", "/api/v1/otherCashInHandReceipts/<int:meeting_id>")
 api.add_resource(loanPurposeListApi, "/api/v1/loanPurposeList")
 api.add_resource(memberLoanPaymentsApi, "/api/v1/memberLoanPayments", "/api/v1/memberLoanPayments/<int:meeting_id>")
 api.add_resource(memberSavingsPaymentsApi, "/api/v1/memberSavingsPayments", "/api/v1/memberSavingsPayments/<int:meeting_id>")
 api.add_resource(bankEmiPaymentsApi, "/api/v1/bankEmiPayments", "/api/v1/bankEmiPayments/<int:meeting_id>" )
 api.add_resource(savingsAccountPaymentsApi, "/api/v1/savingsAccountPayments", "/api/v1/savingsAccountPayments/<int:meeting_id>")
 api.add_resource(otherServiceChargePaymentsApi, "/api/v1/serviceChargePayments", "/api/v1/serviceChargePayments/<int:meeting_id>")
-api.add_resource(otherCashInHandPaymentsApi, "/api/v1/cashInHandPayments", "/api/v1/cashInHandPayments/<int:meeting_id>")
+api.add_resource(otherCashInBoxPaymentsApi, "/api/v1/cashInHandPayments", "/api/v1/cashInHandPayments/<int:meeting_id>")
 
 api.add_resource(operatorDashboardApi, "/api/v1/operatorDashboard")
 

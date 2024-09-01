@@ -6,10 +6,10 @@
             <!-- Loan Repayment -->
             <label for="transactionType" class="form-label m-3">Select Payment Type</label>
             <select class="form-select m-3" @change="fetchAccounts" id="transactionType" v-model="receiptData.transactionType" style="width: max-content;">
-                <option value="0">EMI to Bank</option>
+                <option value="0">Bank loan Repayment</option>
                 <option value="1">Deposit to Savings Account</option>
                 <option value="2">Service Charge to Federation</option>                
-                <option value="3">Cash in hand</option>
+                <option value="3">Cash in Box</option>
             </select>
 
             <label for="loanAccount" class="form-label m-3" v-if="receiptData.transactionType === '0'">Select Loan Account</label>
@@ -17,15 +17,20 @@
                 <option v-for="account in Account_list" :value="account.id">{{account.bank_name}}-{{ account.account_number }}</option>
             </select>
 
-            <div class="mb-3 col-md-6" v-if="receiptData.transactionType === '0'">
-                <label for="principal" class="form-label"> Principal Amount </label>
-                <input type="number" class="form-control short mx-3" id="principal" v-model="receiptData.principalAmount">
+            <div class="mb-3 col-md-12" v-if="receiptData.transactionType === '0'">
+                <label for="principal" class="form-label">Amount </label>
+                <input type="number" class="form-control  mx-3" id="principal" v-model="receiptData.Amount">
             </div>
 
-            <div class="mb-3 col-md-6" v-if="receiptData.transactionType === '0'">
+            <div class="mb-3 col-md-12" v-if="receiptData.transactionType === '0'">
+                <label for="principal" class="form-label">Repayment Date </label>
+                <input type="date" :max="new Date().toISOString().split('T')[0]" class="form-control short mx-3" id="principal" v-model="receiptData.Date">
+            </div>
+
+            <!-- <div class="mb-3 col-md-6" v-if="receiptData.transactionType === '0'">
                 <label for="interest" class="form-label"> Interest Amount </label>
                 <input type="number" class="form-control short mx-3" id="interest" v-model="receiptData.interestAmount">
-            </div>
+            </div> -->
 
             <!-- Savings Deposit -->
             <label for="loanAccount" class="form-label m-3" v-if="receiptData.transactionType === '1'">Select Savings Account</label>
@@ -62,13 +67,13 @@
             </div>
 
 
-            <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;" v-if="receiptData.transactionType == 3">
+            <!-- <div class="mb-3 d-flex justify-content-start" style="margin-left: 10%; margin-top: 2%;" v-if="receiptData.transactionType == 3">
                 <label for="memberName" class="form-label">Member Name</label>
                 <select class="form-select mx-3" id="memberName" v-model="receiptData.cash_in_hand_member_id" style="width: max-content;">
                     <option v-for="member in members_list" :value="member.value">{{member.name}}</option>
                 </select>
             <!-- <input type="text" class="form-control" id="memberName" v-model="receiptData.member_name" required> -->
-            </div>
+            <!-- </div> -->
 
             <div class="mb-3 col-md-6" v-if="receiptData.transactionType == 3">
                 <label for="cash_in_hand_amount" class="form-label">Amount</label>
@@ -89,7 +94,6 @@
                         <th>Sr. No.</th>
                         <th>Payment Type</th>
                         <th>Payment Amount</th>
-                        <th v-if="receiptData.transactionType == 0">Interest Amount</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -98,7 +102,6 @@
                         <td>{{ index+1 }}</td>
                         <td>{{ payment.payment_type }}</td>
                         <td>{{ payment.payment_amount }}</td>
-                        <td v-if="receiptData.transactionType == 0">{{payment.interest_amount }}</td>
                         <td><button class="btn btn-primary" @click="delete_payment(payment.id)">Delete</button></td>
                     </tr>
                 </tbody>
@@ -148,8 +151,8 @@ export default {
             meeting_id: this.meeting_id,
             transactionType: '',
             loanAccountId: '',   
-            principalAmount: 0,
-            interestAmount: 0,
+            Amount: 0,
+            Date: '',
 
             savingsAccountId: '', 
             depositDate: '',
@@ -175,11 +178,13 @@ export default {
                 axios.post('/api/v1/bankEmiPayments', this.receiptData ,  { headers:{ 'Token': localStorage.getItem('token') } } ).then((response) => {
                 if(response.status == 200){
                     alert("Receipt added Successfully!")
+                }else if (response.status == 500){
+                    alert("Receipt already exists!")
                 }else{
                     alert("Problem")
                 }
             }).catch((error) => {
-                alert(error.data)
+                alert("Receipt already exists!")
             })
             }
             else if (this.receiptData.transactionType == 1) {
