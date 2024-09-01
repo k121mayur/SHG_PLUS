@@ -4,34 +4,40 @@
         class="mb-3 mx-0 p-3"
         style="background-color: bisque; width: 100%; text-align: center; border-radius: 10px;"
         > Meeting Workflow</h1>
-        <div class="d-flex flex-row flex-wrap" style="width: 100%;">
-            <div 
-                @click="toggleMemberReceiptsForm()"
-                class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
-                style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
-                <h4>Member Receipts</h4>
-            </div>
+        <div class="d-flex flex-column flex-wrap" style="width: 100%;">
+            <div class="d-flex flex-row justify-content-center">
+                <div 
+                    @click="toggleMemberReceiptsForm()"
+                    class="border col-md-4 d-flex flex-row justify-content-center align-items-center mx-3" 
+                    style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
+                    <h4>Member Receipts</h4>
+                </div>
 
-            <div
-                @click="toggleOtherReceiptsForm()" 
-                class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
-                style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
-                <h4>Other Receipts</h4>
+                <div
+                    @click="toggleOtherReceiptsForm()" 
+                    class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
+                    style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
+                    <h4>Other Receipts</h4>
+                </div>
             </div>
-
-            <div
+            <hr>
+            <div class="d-flex flex-row justify-content-center">
+                <div
                 @click="toggleMemberPaymentsForm()" 
-                class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
-                style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
+                class="border col-md-4 d-flex flex-row justify-content-center align-items-center mx-3" 
+                style="height: 25vh; text-align: center; border-radius: 10px; background-color: DarkSlateGrey; color: white; "> 
                 <h4>Member Payments</h4>
-            </div>
+                </div>
 
-            <div 
-            @click="toggleOtherPaymentsForm()"
-                class="border col-md-4 d-flex flex-row justify-content-center align-items-center my-3" 
-                style="height: 25vh; margin-left: 10%; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
-                <h4>Other Payments</h4>
+                <div 
+                @click="toggleOtherPaymentsForm()"
+                    class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
+                    style="height: 25vh; text-align: center; border-radius: 10px; background-color: DarkSlateGrey; color: white; "> 
+                    <h4>Other Payments</h4>
+                </div>
+            
             </div>
+            
 
             <!-- <div 
                 class="border col-md-4 d-flex flex-row justify-content-center align-items-center my-3" 
@@ -40,8 +46,8 @@
             </div> -->
         </div>
 
-        <div class="m-3 border p-2"> 
-            <h4>Meeting Status :  <span :class="status_class">{{ Meeting_Status }}</span></h4> 
+        <div class="m-3 border p-2 rounded-3" style="background-color: Azure"> 
+            <h4><span class="">Meeting Status : </span> <span :class="status_class">{{ Meeting_Status }}</span></h4> 
         </div>
 
         <div v-if ="memberReceiptsForm" style="position: absolute; top:24%; width: inherit; height: inherit; background-color: white; z-index: 1">

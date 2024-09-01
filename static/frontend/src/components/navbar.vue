@@ -11,7 +11,7 @@
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item active" >
             <RouterLink class="nav-link text-white" to ="/Dashboard">Dashboard</RouterLink>
         </li>
         <li class="nav-item active">

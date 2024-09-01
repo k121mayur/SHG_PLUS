@@ -1,5 +1,5 @@
 <template>
-    <h1 class="my-3">Welcome</h1>
+    <h1 class="my-5 gradient-text">Welcome to SHG PLUS</h1>
     <loginForm/>
 
 </template>
@@ -13,3 +13,18 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.gradient-bg-horizontal {
+    color: linear-gradient(to right, #006400, #ffa500);
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #006400, #32cd32, #ffa500, #ff4500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+
+</style>

@@ -529,6 +529,10 @@ class otherLoanReceiptsApi(Resource):
       loan_interest_rate = interestRate
       )
       db.session.add(new_receipt)
+
+      loan_account = db.session.query(shgBankAccount).filter(shgBankAccount.id == LoanAccountId).first()
+      loan_account.balance = loan_account.balance + loanAmount
+
       db.session.commit()
       return jsonify({"message": "Loan Receipt added successfully."})
    
@@ -542,7 +546,12 @@ class otherLoanReceiptsApi(Resource):
 
    def delete(self):
       id = request.json['id']
-      db.session.query(otherLoanReceipts).filter(otherLoanReceipts.id == id).delete()
+      receipt = db.session.query(otherLoanReceipts).filter(otherLoanReceipts.id == id)
+
+      loan_account = db.session.query(shgBankAccount).filter(shgBankAccount.id == receipt.loan_account_id).first()
+      loan_account.balance = loan_account.balance - receipt.loan_amount
+
+      receipt.delete()
       db.session.commit()
       return jsonify({"message": "Receipt deleted successfully."})
 
@@ -555,6 +564,10 @@ class otherSavingsReceiptsApi(Resource):
       withdrawalDate = data['withdrawalDate']
       withdrawalAmount = data['withdrawalAmount']
 
+      savings_account = db.session.query(shgBankAccount).filter(shgBankAccount.id == savingsAccountId).first()
+      if savings_account.balance < withdrawalAmount:
+         return jsonify({"message": "Insufficient balance in savings account. Can't make withdrawal."})
+      
       new_receipt = otherSavingsReceipts(
       meeting_id = meeting_id,
       savings_account_id = savingsAccountId,
@@ -562,6 +575,8 @@ class otherSavingsReceiptsApi(Resource):
       withdrawal_amount = withdrawalAmount
       )
       db.session.add(new_receipt)
+      savings_account.balance = savings_account.balance - withdrawalAmount
+      
       db.session.commit()
       return jsonify({"message": "Bank Withdrawal Receipt added successfully."})
 
@@ -575,7 +590,12 @@ class otherSavingsReceiptsApi(Resource):
 
    def delete(self):
       id = request.json['id']
-      db.session.query(otherSavingsReceipts).filter(otherSavingsReceipts.id == id).delete()
+      receipt = db.session.query(otherSavingsReceipts).filter(otherSavingsReceipts.id == id)
+
+      shg_account = db.session.query(shgBankAccount).filter(shgBankAccount.id == receipt.savings_account_id).first()
+      shg_account.balance = shg_account.balance + receipt.withdrawal_amount
+
+      receipt.delete()
       db.session.commit()
       return jsonify({"message": "Receipt deleted successfully."})
 
@@ -585,6 +605,13 @@ class otherCashInBoxReceiptsApi(Resource):
       meeting_id = data['meeting_id']
       receipt_date = db.session.query(meetings.meeting_date).filter(meetings.id == meeting_id).first()[0]
       receipt_amount = data['cash_in_hand_amt']
+      shg_id = db.session.query(meetings.shg_id).filter(meetings.id == meeting_id).first()[0]
+      print(shg_id)
+      shg_this = db.session.query(SHG).filter(SHG.id == shg_id).first()
+      print(shg_this)
+      if receipt_amount > shg_this.cash_in_box:
+         return jsonify({"message": "Receipt amount cannot be greater than cash in box amount."})
+
 
       new_receipt = otherCashInBoxReceipts(
       meeting_id = meeting_id,
@@ -592,6 +619,9 @@ class otherCashInBoxReceiptsApi(Resource):
       receipt_amount = receipt_amount,
       )
       db.session.add(new_receipt)
+      
+      shg_this.cash_in_box = shg_this.cash_in_box - receipt_amount
+
       db.session.commit()
       return jsonify({"message": "Receipt added successfully."})
    
@@ -604,7 +634,10 @@ class otherCashInBoxReceiptsApi(Resource):
 
    def delete(self):
       id = request.json['id']
-      db.session.query(otherCashInBoxReceipts).filter(otherCashInBoxReceipts.id == id).delete()
+      receipt = db.session.query(otherCashInBoxReceipts).filter(otherCashInBoxReceipts.id == id)
+      shg_id = db.session.query(meetings.shg_id).filter(meetings.meeting_id == receipt.meeting_id).first()[0]
+      shg = db.session.query(SHG).filter(SHG.id == shg_id).first()
+      shg.cash_in_box = shg.cash_in_box + receipt.receipt_amount
       db.session.commit()
       return jsonify({"message": "Receipt deleted successfully."})
 
@@ -623,6 +656,9 @@ class memberLoanPaymentsApi(Resource):
          loan_purpose = data['loan_purpose']
       )
       db.session.add(new_receipt)
+
+      member = db.session.query(members).filter(members.member_id == member_id).first()
+      member.loan_outstanding += data['loan_amount']
       db.session.commit()
    def get(self, meeting_id):
       member_loan_payments = db.session.query(memberLoanPayments).filter(memberLoanPayments.meeting_id == meeting_id).all()
@@ -634,7 +670,12 @@ class memberLoanPaymentsApi(Resource):
 
    def delete(self):
       id = request.json['id']
-      db.session.query(memberLoanPayments).filter(memberLoanPayments.id == id).delete()
+      receipt = db.session.query(memberLoanPayments).filter(memberLoanPayments.id == id)
+
+      member = db.session.query(members).filter(members.member_id == receipt.member_id).first()
+      member.loan_outstanding -= receipt.payment_amount
+
+      receipt.delete()
       db.session.commit()
       return jsonify({"message": "Receipt deleted successfully."})
 

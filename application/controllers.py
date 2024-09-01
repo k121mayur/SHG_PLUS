@@ -253,7 +253,7 @@ def shareout_report(group_id):
     total_amount = cash_at_bank + cash_in_box + member_loan_outstanding + member_interest_outstanding
     paybale = bank_loan_outstanding
 
-    net_profit = total_amount - paybale
+    net_profit = total_amount - paybale - total_member_savings
     net_profit_per_share = net_profit / total_number_of_shares
 
     final_data = [{"shg": {}, "members":[]}]

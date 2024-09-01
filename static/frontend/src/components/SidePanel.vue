@@ -5,34 +5,44 @@
         </div>
         
         <div class="element"> 
+            <i class="fa fa-house"></i>
             <RouterLink to="/dashboard">Home</RouterLink>
             <!-- <a href="">Group Data Entry</a> -->
         </div>
         
         <div class="element"> 
+            <i class="fa-solid fa-database"></i>
             <RouterLink to="/dataEntry">Group Data Entry</RouterLink>
             <!-- <a href="">Group Data Entry</a> -->
         </div>
         
         <div class="element"> 
+            <i class="fa-regular fa-file"></i>
             <RouterLink to="/dataEntryReport">Data Entry Report</RouterLink>
         </div>
 
+
         <div class="element"> 
-            <RouterLink to="/shareout">Shareout</RouterLink>
-        </div>
+            <i class="fa-solid fa-building-columns"></i>
+            <a href="#">Add Bank Accounts</a>
+        </div class="element">
         
         <div class="element"> 
-            <RouterLink to="/newMember">Add / Remove Member</RouterLink>
+            <i class="fa-solid fa-user"></i>
+            <RouterLink to="/newMember">Add SHG Member</RouterLink>
         </div class="element">
 
         <div class="element"> 
-            <RouterLink to="/newGroup">New Group Entry</RouterLink>
+            <i class="fa-solid fa-people-group"></i>
+            <RouterLink to="/newGroup">New SHG (+) Entry</RouterLink>
         </div>
 
         <div class="element"> 
-            <a href="#">Edit Group Details</a>
-        </div class="element">
+            <i class="fa-solid fa-group-arrows-rotate"></i>
+            <RouterLink to="/shareout">Shareout Report</RouterLink>
+        </div>
+
+        
     
     </div>
 
@@ -55,7 +65,6 @@
         padding : 4%;
         border-radius: 5px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        
         
     }
 

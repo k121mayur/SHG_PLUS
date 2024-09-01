@@ -1,5 +1,5 @@
 <template>
-  <navbar/>
+  <navbar />
   <router-view/>
 </template>
 
@@ -32,6 +32,11 @@ export default {
   name: 'App',
   components: {
     navbar
+  }, 
+  data() {
+    return {
+      token: localStorage.getItem('role')
+    }
   }
 }
 

@@ -1,10 +1,10 @@
 <template>
-    <div class="container border mx-auto custom">
-        <div class="alert alert-danger mt-3 mb-0" v-if="loginError">
+    <div class="container border col-md-6 rounded-5 col-sm-12 col-lg-6 col-xs-12 col-xl-6 d-flex flex-column justify-content-between" style="background-color: beige; height: 50vh;" >
+        <div class="alert alert-danger mt-1 mb-0" v-if="loginError">
         {{ loginError }}
         </div>
-        <form class=" p-3 flex" @submit.prevent="login">
-            <div class="form-group my-3 d-flex flex-row justify-content-end">
+        <form class="d-flex flex-column justify-content-top align-items-center col-md-12 mt-0"  @submit.prevent="login">
+            <div class="form-group my-3 d-flex flex-row justify-content-start">
                 <!-- label for="role" style="text-wrap: nowrap;" class="m-3" >Role</label>
                 <select type="email" class="form-control" id="role" style="width: 70%;" required v-model="role" > 
                     <option value="admin" >Admin</option>
@@ -13,27 +13,20 @@
                     </select -->
 
             </div>
-            <div class="form-group my-3 d-flex flex-row justify-content-end">
-                <label for="exampleInputEmail1" style="text-wrap: nowrap;" class="m-3" >Email address</label>
-                <input type="text" v-model="email" class="form-control" id="exampleInputEmail1" style="width: 70%;" aria-describedby="emailHelp" placeholder="Enter email" required>
+            <div class="form-group my-3 d-flex flex-row justify-content-start col-md-10">
+                <label for="exampleInputEmail1" style="text-wrap: nowrap;" class="my-3 col-md-4 mr-3" >Email address</label>
+                <input type="text" v-model="email" class="rounded border col-md-6 p-1" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
 
             </div>
-            <div class="form-group d-flex flex-row justify-content-end">
-                <label for="exampleInputPassword1" style="text-wrap: nowrap;" class="m-3">Password</label>
-                <input type="password" v-model="password" class="form-control" style="width: 70%;" id="exampleInputPassword1" placeholder="Password" required>
+            <div class="form-group d-flex flex-row justify-content-start col-md-10">
+                <label for="exampleInputPassword1" style="text-wrap: nowrap;" class="my-3 col-md-4 mr-3">Password</label>
+                <input type="password" v-model="password" class="rounded border col-md-6 p-1" id="exampleInputPassword1" placeholder="Password" required>
             </div>
        
-            <button type="submit" class="btn btn-primary my-3">Login</button>
+            <button type="submit" class="btn btn-primary col-md-4 col-sm-6 p-2 mt-4">Login</button>
         </form>
     </div>
 </template>
-
-<style>
-    .custom {
-        width: 40%;
-        border-radius: 20px;
-    }
-</style>
 
 
 
@@ -46,7 +39,7 @@ export default {
   name: 'loginForm',
   data() {
     return {
-      role: "", // This might not be ideal, see note below
+      role: "", 
       email: "",
       password: "",
       server,

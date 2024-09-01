@@ -137,7 +137,7 @@ shg_loan_account = shgBankAccount(
     account_number = "0012229384755",
     IFSC_code = "HDFC0000012",
     shg_id = 1,
-    balance = 100000
+    balance = 0
 )
 
 
@@ -150,7 +150,7 @@ shg_saving_account = shgBankAccount(
     account_number = "00122293847551",
     IFSC_code = "HDFC0000012",
     shg_id = 1,
-    balance = 100000
+    balance = 0
 )
 
 if loan_account_check is None:
