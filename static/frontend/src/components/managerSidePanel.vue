@@ -14,16 +14,9 @@
         </div>
 
         <div class="element"> 
-            <RouterLink to="/savingsReport">Monthly Report</RouterLink>
+            <RouterLink to="/savingsReport">Monthly MIS Report</RouterLink>
         </div>
         
-        <div class="element"> 
-            <RouterLink to="/creditReport">Monthly Credit Report</RouterLink>
-        </div class="element">
-
-        <div class="element"> 
-            <RouterLink to="/dissolveGroupReport">dissolved Group Report</RouterLink>
-        </div>
     
     </div>
 

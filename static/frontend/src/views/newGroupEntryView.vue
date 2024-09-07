@@ -1,9 +1,9 @@
 <template>
 
     <div class="d-flex flex-row m-0 col-md-12 panel"> 
-        <SidePanel class="col-md-2"/>
+        <SidePanel class="col-md-3"/>
         <newGroupEntry
-         class="main-panel col-md-10" />
+         class="main-panel col-md-9 col-lg-9 col-xl-9" />
     </div>
 
 </template>

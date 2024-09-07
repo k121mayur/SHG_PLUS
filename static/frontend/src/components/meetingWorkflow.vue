@@ -8,32 +8,43 @@
             <div class="d-flex flex-row justify-content-center">
                 <div 
                     @click="toggleMemberReceiptsForm()"
-                    class="border col-md-4 d-flex flex-row justify-content-center align-items-center mx-3" 
+                    class="border col-md-4 d-flex flex-column justify-content-center align-items-center mx-3" 
                     style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
                     <h4>Member Receipts</h4>
+                    <p>Total: {{ total_member_receipts }}</p>
                 </div>
 
                 <div
                     @click="toggleOtherReceiptsForm()" 
-                    class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
+                    class="border col-md-4 d-flex flex-column justify-content-center align-items-center" 
                     style="height: 25vh; text-align: center; border-radius: 10px; background-color: green; color: white; "> 
                     <h4>Other Receipts</h4>
+                    <p>Total: {{ total_other_receipts }}</p>
+                </div>
+                <div class="border col-md-2 d-flex flex-column justify-content-center align-items-center mx-3 rounded-3">
+                    Total Receipts <br>Rs.{{ total_member_receipts + total_other_receipts }}
                 </div>
             </div>
             <hr>
             <div class="d-flex flex-row justify-content-center">
                 <div
                 @click="toggleMemberPaymentsForm()" 
-                class="border col-md-4 d-flex flex-row justify-content-center align-items-center mx-3" 
+                class="border col-md-4 d-flex flex-column justify-content-center align-items-center mx-3" 
                 style="height: 25vh; text-align: center; border-radius: 10px; background-color: DarkSlateGrey; color: white; "> 
                 <h4>Member Payments</h4>
+                <p>Total: {{ total_member_payments }}</p>
                 </div>
 
                 <div 
                 @click="toggleOtherPaymentsForm()"
-                    class="border col-md-4 d-flex flex-row justify-content-center align-items-center" 
+                    class="border col-md-4 d-flex flex-column justify-content-center align-items-center" 
                     style="height: 25vh; text-align: center; border-radius: 10px; background-color: DarkSlateGrey; color: white; "> 
                     <h4>Other Payments</h4>
+                    <p>Total: {{ total_other_payments }}</p>
+                </div>
+
+                <div class="border col-md-2 d-flex flex-column justify-content-center align-items-center mx-3 rounded-3">
+                    Total Payments <br>Rs.{{ total_member_payments + total_other_payments }}
                 </div>
             
             </div>
@@ -127,6 +138,12 @@ export default {
             Meeting_Status: "Incomplete",
             status_class: "text-success",
 
+            total_member_receipts: 0,
+            total_other_receipts: 0,
+
+            total_member_payments: 0,
+            total_other_payments: 0,
+
             members_list: []
         }
     },
@@ -158,6 +175,10 @@ export default {
             axios.get('/meeting_status/' + meeting_id,  {headers: { 'Token': localStorage.getItem('token') }} ).then((response) => {
                 this.Meeting_Status = response.data.meeting_status
                 this.status_class = response.data.status_class
+                this.total_member_receipts = response.data.total_member_receipts
+                this.total_other_receipts = response.data.total_other_receipts
+                this.total_member_payments = response.data.total_member_payments
+                this.total_other_payments = response.data.total_other_payments
             })
         },
         fetchSharePrice(meeting_id){

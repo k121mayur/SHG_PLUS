@@ -2,7 +2,7 @@
     <div class="d-flex flex-row m-0 col-md-12 panel"> 
             <managerSidePanel class="col-md-3"/>
             <savingReport
-            class="main-panel col-md-9 m-2" />
+            class="main-panel col-md-9 my-2" />
     </div>  
 </template>
 

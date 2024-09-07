@@ -1,8 +1,8 @@
 <template> 
         <div class="d-flex flex-row m-0 col-md-12 panel"> 
-            <SidePanel class="col-md-2"/>
+            <SidePanel class="col-md-3"/>
             <memberEntry
-            class="main-panel col-md-10" />
+            class="main-panel col-md-9" />
         </div>
 
 </template>

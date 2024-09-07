@@ -22,10 +22,13 @@
             <div class="mb-3 col-md-12 d-flex justify-content-start">
                 <label for="loanPurpose" class="form-label">Loan Purpose</label>
                 <select class="form-select mx-3" id="loanPurpose" v-model="receiptData.loan_purpose" style="width: max-content;">
-                        <option value="A">Livelihood/Investment </option>
+                        <option value="A">Consumption </option>
                         <option value="B">Health</option>
                         <option value="C">Education</option>
-                        <option value="D">Repayment of High interest loan</option>
+                        <option value="D">Investment</option>
+                        <option value="E">Loan Repayment of previous loan</option>
+                        <option value="F">Livlihood Loan</option>
+                        <option value="G">Other</option>
                         <!-- <option value="01-E">Purchasing Land</option>
                         <option value="01-F">Taking Land on Lease</option>
                         <option value="01-G">Deepening the Well, Borewell, etc.</option>

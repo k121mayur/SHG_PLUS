@@ -8,9 +8,11 @@ import meetingWorkflowView from '@/views/meetingWorkflowView.vue'
 import dataEntryReportView from '@/views/dataEntryReportView.vue'
 import shareoutView from '@/views/shareoutView.vue'
 import savingReportView from '@/views/savingReportView.vue'
-import creditReportView from '@/views/creditReportView.vue'
+
+import addAccountView from '@/views/addAccountView.vue'
 
 const routes = [
+
   {
     path: '/',
     name: 'login',
@@ -76,11 +78,10 @@ const routes = [
   }, 
 
   {
-    path: '/creditReport',
-    name: 'creditReport',
-    props: false,
-    component: creditReportView
-  }
+    path: '/addAccount',
+    name: 'addAccount',
+    component: addAccountView
+  },
 
 ]
 

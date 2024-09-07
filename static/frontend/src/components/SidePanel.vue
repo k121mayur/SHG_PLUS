@@ -24,7 +24,8 @@
 
         <div class="element"> 
             <i class="fa-solid fa-building-columns"></i>
-            <a href="#">Add Bank Accounts</a>
+            <RouterLink to="/addAccount">Add Bank Accounts</RouterLink>
+            <a href="#"></a>
         </div class="element">
         
         <div class="element"> 

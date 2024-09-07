@@ -2,8 +2,9 @@
   <div>
     <div class="z-100 text-danger" v-if="!shg_status" style="margin: auto; font-size: 20px"> You Can't Add a member
       without adding a SHG</div>
+      <h1 class="text-center mx-0 px-0 col-md-12 rounded">Member Registration Form</h1>
     <div class="container" v-if="shg_status">
-      <h1 class="text-center mx-0 px-0 col-md-12">Member Registration Form</h1>
+      
       <form @submit.prevent="addMember">
         <div class="row">
 
@@ -315,18 +316,17 @@ form {
   width: 90%;
 }
 
-h4 {
+h2 {
   text-align: center;
-  color: blueviolet;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  background-color: gold;
+  color: rgb(3, 0, 0);
+  background-color: rgb(255, 232, 105);
   border-radius: 10px;
   padding: 1%;
 }
 
 h1 {
-  color: green;
-  background-color: whitesmoke;
+  color: rgb(23, 0, 128);
+  background-color: rgb(184, 216, 64);
   padding: 1%;
 }
 </style>

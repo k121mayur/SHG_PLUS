@@ -781,7 +781,10 @@ class savingsAccountPaymentsApi(Resource):
    
    def delete(self):
       id = request.json['id']
-      db.session.query(savingsAccountPayments).filter(savingsAccountPayments.id == id).delete()
+      receipt = db.session.query(savingsAccountPayments).filter(savingsAccountPayments.id == id).first()
+      account = db.session.query(shgBankAccount).filter(shgBankAccount.id == receipt.savings_account_id).first()
+      account.balance -= receipt.payment_amount
+      receipt.delete()
       db.session.commit()
       return jsonify({"message": "Receipt deleted successfully."})
 
@@ -828,6 +831,10 @@ class otherCashInBoxPaymentsApi(Resource):
       )
 
       db.session.add(new_receipt)
+
+      shg_id = db.session.query(meetings.shg_id).filter(meetings.id == meeting_id).first()[0]
+      shg = db.session.query(SHG).filter(SHG.id == shg_id).first()
+      shg.cash_in_box += data['cash_in_hand_amount']
       db.session.commit()
       return jsonify({"message": "Receipt added successfully."})
    def get(self, meeting_id):

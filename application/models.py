@@ -74,6 +74,7 @@ class shgBankAccount(db.Model):
     IFSC_code = db.Column(db.String(20), nullable=False)
     shg_id = db.Column(db.Integer, db.ForeignKey('shg.id'), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
+    __table_args__ = (db.UniqueConstraint('bank_name', 'account_number'),)
 
 
 class schemes(db.Model):
