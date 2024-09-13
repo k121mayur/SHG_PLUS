@@ -214,7 +214,6 @@ def all(path):
 
 @app.route("/savingsReport/byMonth/<int:month>")
 def savingsReportByMonth(month):
-    time.sleep(10)
     data = []
     shgs = db.session.query(SHG).all()
 

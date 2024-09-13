@@ -380,6 +380,7 @@ class meetingApi(Resource):
         return jsonify(meetings_list)   
       
 class memberReceiptApi(Resource):
+   
    def post(self):
       data = request.json
       meeting_id = data['meeting_id']
@@ -408,7 +409,7 @@ class memberReceiptApi(Resource):
               db.session.query(members).filter(members.member_id == member_id).update({members.total_savings : new_saving})
 
            except Exception as e:
-              return jsonify({"message": str(e)})
+              return jsonify({"message": "Double Entry Error", "error": "Internal Server Error"})
            
         
         elif int(amt) > 0 and type == "principal": #principal
